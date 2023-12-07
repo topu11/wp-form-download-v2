@@ -300,48 +300,55 @@ JSZipUtils.getBinaryContent = function(path, callback, progress) {
 //compressed_img(urls, filename);
 function  enc_download(id)
 {
-  swal.showLoading();
+    swal.showLoading();
     var case_id=document.getElementById(id).getAttribute('data-case');
     var file = document.getElementById(id).getAttribute('data-file');
     var file_name = document.getElementById(id).getAttribute('data-name');
     var urls=file.split(','); 
     var parts=urls[0].split("/");
     var lastPart = parts[parts.length - 1];
-    var formdata = new FormData();
-    formdata.append('action','enoderit_custom_form_download_zip_status');
-    formdata.append('nonce',action_url_ajax.nonce)
-    formdata.append('case_id',case_id)
-    jQuery.ajax({
-      url: action_url_ajax.ajax_url,
-      type: 'post',
-      processData: false,
-      contentType: false,
-      processData: false,
-      data: formdata,
-       beforeSend: function() {
-       compressed_img(urls,file_name)
-      
-      },
-      success: function(data) {
-        
-        const obj = JSON.parse(data);
-        console.log(obj);
+    compressed_img(urls,file_name)
+    Swal.fire({
+                  title: "Don't close the browser",
+                  text:"till file download is complete",
+                 icon: "warning"
+             });
 
-          if (obj.success == "success") {
-               Swal.fire({
-                title: "Don't close the browser",
-                text:"till file download is complete",
-                icon: "warning"
-              });
-            jQuery('#download_flag_'+case_id).empty();
-           jQuery('#download_flag_'+case_id).html('<a class="button" style="background-color:#28a74573;border-color: #28a74573;cursor: not-allowed;color:#fff" href="javascript:void(0)">Already downloaded</a>');
-          }
-          if(obj.success == "error")
-          {
+    // var formdata = new FormData();
+    // formdata.append('action','enoderit_custom_form_download_zip_status');
+    // formdata.append('nonce',action_url_ajax.nonce)
+    // formdata.append('case_id',case_id)
+    // jQuery.ajax({
+    //   url: action_url_ajax.ajax_url,
+    //   type: 'post',
+    //   processData: false,
+    //   contentType: false,
+    //   processData: false,
+    //   data: formdata,
+    //    beforeSend: function() {
+    //    compressed_img(urls,file_name)
+      
+    //   },
+    //   success: function(data) {
+        
+    //     const obj = JSON.parse(data);
+    //     console.log(obj);
+
+    //       if (obj.success == "success") {
+    //            Swal.fire({
+    //             title: "Don't close the browser",
+    //             text:"till file download is complete",
+    //             icon: "warning"
+    //           });
+    //         jQuery('#download_flag_'+case_id).empty();
+    //        jQuery('#download_flag_'+case_id).html('<a class="button" style="background-color:#28a74573;border-color: #28a74573;cursor: not-allowed;color:#fff" href="javascript:void(0)">Already downloaded</a>');
+    //       }
+    //       if(obj.success == "error")
+    //       {
             
-          }
-      }
-    });
+    //       }
+    //   }
+    // });
     //compressed_img(urls,file_name,case_id,ajax_calling_after_zip)        
     
 }
@@ -449,3 +456,96 @@ var p={};
 //   }
 
 
+function cancle_the_form(id)
+{
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action Change Make it Cancle.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, proceed!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            var case_id = document.getElementById(id).getAttribute('data-case');
+            var formdata = new FormData();
+                formdata.append('action','enoderit_custom_form_cancle_form');
+                formdata.append('nonce',action_url_ajax.nonce)
+                formdata.append('case_id',case_id)
+                jQuery.ajax({
+                  url: action_url_ajax.ajax_url,
+                  type: 'post',
+                  processData: false,
+                  contentType: false,
+                  processData: false,
+                  data: formdata,
+                  success: function(data) {
+                  
+                    const obj = JSON.parse(data);
+                    console.log(obj);
+          
+                      if (obj.success == "success") {
+                          location.reload();
+                      }
+                      if(obj.success == "error")
+                      {
+                      
+                      }
+                  }
+                });
+          } else {
+              // User clicked "Cancel" or closed the dialog
+              Swal.fire('Cancelled', 'The action was cancelled.', 'info');
+              // Add your logic here for cancellation
+          }
+  });
+
+  
+}
+
+function restore_the_form(id)
+{
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'This action Change Make it Restore.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, proceed!'
+  }).then((result) => {
+      if (result.isConfirmed) {
+        var case_id = document.getElementById(id).getAttribute('data-case');
+        var formdata = new FormData();
+            formdata.append('action','enoderit_custom_form_restore_form');
+            formdata.append('nonce',action_url_ajax.nonce)
+            formdata.append('case_id',case_id)
+            jQuery.ajax({
+              url: action_url_ajax.ajax_url,
+              type: 'post',
+              processData: false,
+              contentType: false,
+              processData: false,
+              data: formdata,
+              success: function(data) {
+              
+                const obj = JSON.parse(data);
+                console.log(obj);
+      
+                  if (obj.success == "success") {
+                      location.reload();
+                  }
+                  if(obj.success == "error")
+                  {
+                  
+                  }
+              }
+            });
+      } else {
+          // User clicked "Cancel" or closed the dialog
+          Swal.fire('Cancelled', 'The action was cancelled.', 'info');
+          // Add your logic here for cancellation
+      }
+});
+}

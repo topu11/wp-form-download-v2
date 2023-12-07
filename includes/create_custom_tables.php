@@ -37,9 +37,11 @@ class encoderit_create_custom_table
             `payment_method` VARCHAR(100) NULL , 
             `transaction_number` VARCHAR(100) NULL,
             `total_price` FLOAT NOT NULL ,
-            `is_downloaded_by_user` TINYINT NOT NULL DEFAULT '0', 
+            `is_cancelled` TINYINT NOT NULL DEFAULT '0', 
             `created_at` TIMESTAMP NULL DEFAULT NULL , 
-            `updated_at` TIMESTAMP NULL DEFAULT NULL , PRIMARY KEY (`id`)
+            `updated_at` TIMESTAMP NULL DEFAULT NULL ,
+            `updated_by` BIGINT  NULL ,
+             PRIMARY KEY (`id`)
         ) $charset_collate;";
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

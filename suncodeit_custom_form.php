@@ -60,7 +60,7 @@ function admin_enqueue_scripts_load()
 
    wp_register_script('encoderit_custom_form_js_zs_zip', 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',array(),ENCODER_IT_CUSTOM_FORM_SUBMIT);
 
-  // wp_enqueue_style('encoderit_admin_custom_plugin_css');
+   //wp_enqueue_style('encoderit_admin_custom_plugin_css',plugins_url('assets/css/custom.css',__FILE__ ), array(), ENCODER_IT_CUSTOM_FORM_SUBMIT);
 
   wp_localize_script('encoderit_custom_form_js_admin', 'action_url_ajax', array(
    'ajax_url' => admin_url('admin-ajax.php'),
@@ -81,7 +81,8 @@ add_action('admin_enqueue_scripts', 'admin_enqueue_scripts_load');
 
 /***********Ajax Functionalities ************/
 add_action('wp_ajax_enoderit_custom_form_submit', array('encoderit_ajax_endpoints','enoderit_custom_form_submit'));
-add_action('wp_ajax_enoderit_custom_form_download_zip_status', array('encoderit_ajax_endpoints','enoderit_custom_form_download_zip_status'));
+add_action('wp_ajax_enoderit_custom_form_cancle_form', array('encoderit_ajax_endpoints','enoderit_custom_form_cancle_form'));
+add_action('wp_ajax_enoderit_custom_form_restore_form', array('encoderit_ajax_endpoints','enoderit_custom_form_restore_form'));
 add_action('wp_ajax_enoderit_custom_form_admin_submit', array('encoderit_admin_functionalities','enoderit_custom_form_admin_submit'));
 
 
@@ -129,3 +130,4 @@ if (!function_exists('encoderit_download_button_avaialbe_time_expire')) {
    }
 }
 
+// Add custom stylesheet to change row color for the custom table

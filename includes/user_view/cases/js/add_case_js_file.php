@@ -277,7 +277,7 @@ paypal.Buttons({
                             Swal.fire({
                                 // position: 'top-end',
                                 icon: 'success',
-                                text: 'Save Successfully',
+                                text: 'Your files and Payment is successfully uploaded',
                                 showConfirmButton: false,
                                 timer: 2500
                             })
@@ -388,7 +388,7 @@ var form = document.getElementById('fileUploadForm');
                             Swal.fire({
                                 // position: 'top-end',
                                 icon: 'success',
-                                text: 'Save Successfully',
+                                text: 'Your files and Payment is successfully uploaded',
                                 showConfirmButton: false,
                                 timer: 2500
                             })

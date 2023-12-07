@@ -53,7 +53,7 @@
                             Swal.fire({
                                 // position: 'top-end',
                                 icon: 'success',
-                                text: 'Save Successfully',
+                                text: 'Uploaded files is successfully stored and clients will get email about it',
                                 showConfirmButton: false,
                                 timer: 2500
                             })

@@ -78,7 +78,8 @@ class EncoderITCustomForm extends WP_List_Table
             "Transaction Method" => "Transaction Method",
              "Date"        =>      "Date",
             "Admin File Upload"  =>"Admin File Upload",
-            'Action'  => 'Action'
+            'Action'  => 'Action',
+            'Cancel'  => 'Cancel'
         );
 
         return $columns;
@@ -117,6 +118,12 @@ class EncoderITCustomForm extends WP_List_Table
    
     private function table_data()
     {
+        // echo '<script>
+        // if(jQuery(".wp-list-table .case_no_cancel_check").hasClass("encoder_it_cancled_row"))
+        //     {
+        //     console.log("aa");
+        //     }                    
+        // </script>';
         global $wpdb;
         
         $table_name = $wpdb->prefix . 'encoderit_custom_form';
@@ -134,22 +141,31 @@ class EncoderITCustomForm extends WP_List_Table
                 
                 $upload_by_admin_flag=false;
                 $upload_by_admin_massage='Not Uploaded';
-                if(!empty($singledata->files_by_admin))
+                if(!empty($singledata->files_by_admin) && !empty($singledata->updated_by) )
                 {
-                    $upload_by_admin_massage = "Uploded";
+                    $upload_by_admin_massage = '<a  href="' .admin_url() .'user-edit.php'. '?user_id='.$singledata->updated_by.'" class="" target="_blank">'.get_user_by('ID',$singledata->updated_by)->display_name.'</a>';
                     $upload_by_admin_flag=true;
                 }
+                $cancle_class='';
+                $cancle_button='<a  href="javascript:void(0)" class="button" onclick="cancle_the_form(this.id)" id="admin_cancle_form_id_'.$singledata->id.'" data-case="'.$singledata->id.'" style="background-color: #c82333;color: black">Cancle</a>';
 
+                if($singledata->is_cancelled == 1)
+                {
+                    $cancle_class='encoder_it_cancled_row';
+                    $cancle_button='<a  href="javascript:void(0)" class="button" onclick="restore_the_form(this.id)" id="admin_cancle_form_id_'.$singledata->id.'" data-case="'.$singledata->id.'" style="background-color: #009B00;color: black">Restore</a>';
+                }
                 $date=explode(' ',$singledata->created_at)[0];
                 $data[] = array(
                     'Case No.'                    => '#'.$singledata->id,
-                    'Amount'              => '$ '. $singledata->total_price,
-                    'Submitted By'             => get_user_by('ID',$singledata->user_id)->user_email,
+                    'Amount'              => '<p class='.$cancle_class.' $ >'. $singledata->total_price.'</p>',
+                    'Submitted By'             =>'<a  href="' .admin_url() .'user-edit.php'. '?user_id='.$singledata->user_id.'" class="'.$cancle_class.' case_no_cancel_check" target="_blank">'.get_user_by('ID',$singledata->user_id)->display_name.'</a>',
                     'Payment Method'          => $singledata->payment_method,
                     'Transaction Method'       => $singledata->transaction_number,
                     'Date'                =>  implode('/',array_reverse(explode('-',$date))),
                     'Admin File Upload'        =>$upload_by_admin_massage,
-                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=encoderit-custom-cases-user-view&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Details</a>',
+                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=encoderit-custom-cases-user-view&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Details</a>
+                    ',
+                    'Cancel'                    => $cancle_button,
                 );
                 $sl++;
             }
@@ -159,7 +175,7 @@ class EncoderITCustomForm extends WP_List_Table
 
         return $data;
     }
-
+    
     /**
      * Define what data to show on each column of the table
      *
@@ -179,6 +195,7 @@ class EncoderITCustomForm extends WP_List_Table
             case "Transaction Method":
             case "Admin File Upload":
             case 'Action':
+            case 'Cancel': 
                 return $item[$column_name];
 
             default:
@@ -217,7 +234,12 @@ class EncoderITCustomForm extends WP_List_Table
         return -$result;
     }
  
-   
+    // public function single_row( $item ) {
+    //     $cssClass = ($item['is_cancelled'] == 1) ? 'encoder_it_cancled_row' : '';
+    //     echo '<tr class="'.$cssClass.'">';
+    //     $this->single_row_columns( $item );
+    //     echo '</tr>';
+    // }
 
 }
 $pbwp_products = new EncoderITCustomForm();
@@ -235,4 +257,10 @@ $pbwp_products->prepare_items();
         </form>
     </div>
     <?php $pbwp_products->display(); ?>
+    <script>
+        if(jQuery('.wp-list-table .case_no_cancel_check').hasClass('encoder_it_cancled_row'))
+            {
+                jQuery('.encoder_it_cancled_row').closest('tr').css('background-color', 'lightcoral');
+            }
+    </script>
 </div>

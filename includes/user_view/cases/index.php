@@ -76,6 +76,7 @@ class EncoderITCustomForm extends WP_List_Table
             "Date"        =>      "Date",
             "Admin Submitted Date"        =>      "Admin Submitted Date",
             "Admin File Upload"  =>"Download Submitted File By Admin",
+            'Cancel'  => 'Cancel'
         );
 
         return $columns;
@@ -139,7 +140,7 @@ class EncoderITCustomForm extends WP_List_Table
                 $download_link='';
                 $encoderit_download_button_avaialbe=encoderit_download_button_avaialbe($singledata->updated_at);
                 $encoderit_already_downloaded=false;
-                if(!empty($singledata->files_by_admin) && $encoderit_download_button_avaialbe)
+                if(!empty($singledata->files_by_admin) && $encoderit_download_button_avaialbe && $singledata->is_cancelled == 0)
                 {
                         $files_by_admin=json_decode($singledata->files_by_admin,true);
                         foreach ($files_by_admin as $file) {
@@ -162,20 +163,34 @@ class EncoderITCustomForm extends WP_List_Table
              
                    
                 }
-                if ($singledata->is_downloaded_by_user == 1) {
+                // if ($singledata->is_downloaded_by_user == 1) {
                     
-                        $download_link='<a class="button" style="background-color:#28a74573;border-color: #28a74573;cursor: not-allowed;color:#fff" href="javascript:void(0)">Already downloaded</a>';
-                        $encoderit_already_downloaded=true;
+                //         $download_link='<a class="button" style="background-color:#28a74573;border-color: #28a74573;cursor: not-allowed;color:#fff" href="javascript:void(0)">Already downloaded</a>';
+                //         $encoderit_already_downloaded=true;
                     
-                }
-                if(!empty($singledata->files_by_admin) && !$encoderit_already_downloaded)
+                // }
+                // if(!empty($singledata->files_by_admin) && !$encoderit_already_downloaded)
+                // {
+                //     if(!encoderit_download_button_avaialbe_time_expire($singledata->updated_at))
+                //     {
+                //         $download_link='<a class="button" style="background-color:#c82333;color:#fff" href="javascript:void(0)">24 Hours expire</a>';
+                //     }
+                // }
+                if(!empty($singledata->files_by_admin))
                 {
                     if(!encoderit_download_button_avaialbe_time_expire($singledata->updated_at))
                     {
                         $download_link='<a class="button" style="background-color:#c82333;color:#fff" href="javascript:void(0)">24 Hours expire</a>';
                     }
                 }
-                
+                $cancle_class='';
+                $cancle_button='';
+
+                if($singledata->is_cancelled == 1)
+                {
+                    $cancle_class='encoder_it_cancled_row';
+                    $cancle_button='<a  href="javascript:void(0)" class="button" style="background-color: #c82333;color: black">Cancelled</a>';
+                }
 
                 $date=explode(' ',$singledata->created_at)[0];
                 $updated_at='';
@@ -193,8 +208,8 @@ class EncoderITCustomForm extends WP_List_Table
                     'Amount'              =>'$ '. $singledata->total_price,
                     'Date'                => implode('/',array_reverse(explode('-',$date))),
                     'Admin Submitted Date'                => $updated_at,
-                    'Admin File Upload'        =>'<div id="download_flag_'.$singledata->id.'">'.$download_link.'</div>',
-                    'Action'                    => '',
+                    'Admin File Upload'        =>'<div class="'.$cancle_class.' case_no_cancel_check" id="download_flag_'.$singledata->id.'">'.$download_link.'</div>',
+                    'Cancel'                    => $cancle_button,
                 );
                 $sl++;
             }
@@ -222,8 +237,8 @@ class EncoderITCustomForm extends WP_List_Table
             case "Admin Submitted Date":    
             case "Admin File Upload":
             case 'Action':
-                return $item[$column_name];
-
+            case 'Cancel':
+            return $item[$column_name];
             default:
                 return print_r($item, true);
         }
@@ -278,4 +293,10 @@ $pbwp_products->prepare_items();
         </form>
     </div>
     <?php $pbwp_products->display(); ?>
+    <script>
+        if(jQuery('.wp-list-table .case_no_cancel_check').hasClass('encoder_it_cancled_row'))
+            {
+                jQuery('.encoder_it_cancled_row').closest('tr').css('background-color', 'lightcoral');
+            }
+    </script>
 </div>

@@ -55,6 +55,7 @@ class encoderit_ajax_endpoints
                     if($inserted)
                     {
                         self::send_mail();
+                        self::send_mail_client();
                         echo  json_encode([
                             'success' => 'success',
                             'message'=>'Form Submmited Successfully'
@@ -206,6 +207,7 @@ class encoderit_ajax_endpoints
         if($inserted)
         {
             self::send_mail();
+            self::send_mail_client();
             return  json_encode([
                 'success' => 'success',
                 'message'=>'Form Submmited Successfully'
@@ -237,8 +239,25 @@ class encoderit_ajax_endpoints
 
 		wp_mail($to, $subject, $message, $headers);
     }
-    
-    public function enoderit_custom_form_download_zip_status()
+    public static function send_mail_client()
+    {
+        $to = wp_get_current_user()->user_email;
+
+		$subject = 'New Case Form Submission ' . ' (' . wp_get_current_user()->display_name . ')';
+
+		$message = '<p> Contact Name: ' . wp_get_current_user()->display_name . '</p>';
+
+		$message .= '<p> Contact Email: ' . wp_get_current_user()->user_email . '</p>';
+		$message .= '<p> Payment_method: ' . $_POST['payment_method'] . '</p>';
+		$message .= '<p> Transaction Number: ' . $_POST['paymentMethodId'] . '</p>';
+        $message .= '<p> Total Price: ' . $_POST['total_price'] . '</p>';
+
+		$headers = "MIME-Version: 1.0" . "\r\n";
+		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+		wp_mail($to, $subject, $message, $headers);
+    }
+    public function enoderit_custom_form_cancle_form()
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'encoderit_custom_form';
@@ -250,7 +269,32 @@ class encoderit_ajax_endpoints
         }else
         {
             $data = array(
-                'is_downloaded_by_user' => 1,
+                'is_cancelled' => 1,
+            );
+            $where_condition=array(
+                'id' => $_POST['case_id']
+            );
+        }
+        $inserted=$wpdb->update($table_name, $data, $where_condition);
+        echo  json_encode([
+            'success' => 'success',
+        ]);
+        wp_die();
+    }
+
+    public function enoderit_custom_form_restore_form()
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'encoderit_custom_form';
+        if (!wp_verify_nonce($_POST['nonce'], 'user_zip_download_suncode')) {
+            echo json_encode([
+                'success' => 'error',
+                'message'=>'Invalid Nonce field'
+            ]);
+        }else
+        {
+            $data = array(
+                'is_cancelled' => 0,
             );
             $where_condition=array(
                 'id' => $_POST['case_id']

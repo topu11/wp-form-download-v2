@@ -217,6 +217,4 @@ input[type="checkbox"] {
   -webkit-appearance: checkbox !important;
 }
 
-
-
 </style>
