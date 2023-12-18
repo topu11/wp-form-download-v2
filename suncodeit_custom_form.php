@@ -3,7 +3,7 @@
  * Plugin Name:       Suncode IT Custom Form
  * Plugin URI:        https://test.net/
  * Description:       Handle customized form with the plugin.
- * Version:           1.0.9
+ * Version:           1.0.10
  */
 
  define('ENCODER_IT_CUSTOM_FORM_SUBMIT', time());
@@ -26,18 +26,18 @@
 
  function admin_menu()
  {
-    add_menu_page('Custom Services', 'Custom Services', 'manage_options', 'encoderit-custom-services',array( 'encoderit_admin_functionalities', 'get_service_list' ), 'dashicons-admin-generic', 4);
+    add_menu_page('Custom Services', 'Custom Services', 'manage_options', 'scf-custom-services',array( 'encoderit_admin_functionalities', 'get_service_list' ), 'dashicons-admin-generic', 4);
 
-    add_submenu_page('options.php', 'Service Update', 'Service Update', 'manage_options', 'encoderit-custom-service-update', array( 'encoderit_admin_functionalities', 'update_service' ));
+    add_submenu_page('options.php', 'Service Update', 'Service Update', 'manage_options', 'scf-encoderit-custom-service-update', array( 'encoderit_admin_functionalities', 'update_service' ));
 
-    add_submenu_page('encoderit-custom-services', 'Add new Service', 'Add new Service', 'manage_options', 'encoderit-custom-service-create', array( 'encoderit_admin_functionalities', 'add_new_service' ));
+    add_submenu_page('scf-custom-services', 'Add new Service', 'Add new Service', 'manage_options', 'scf-custom-service-create', array( 'encoderit_admin_functionalities', 'add_new_service' ));
 
-    add_menu_page('Cases', 'Cases', 'read', 'encoderit-custom-cases-user',array( 'encoderit_user_functionalities', 'get_all_case_by_user' ), 'dashicons-admin-generic', 4);
+    add_menu_page('Cases', 'Cases', 'read', 'scf-custom-cases-user',array( 'encoderit_user_functionalities', 'get_all_case_by_user' ), 'dashicons-admin-generic', 4);
 
-    //add_submenu_page('', 'Service Update', 'Service Update', 'manage_options', 'encoderit-custom-service-update', 'encoderit_details_subscriber');
-    add_submenu_page('encoderit-custom-cases-user', 'Add New Case', 'Add New Case', 'read', 'encoderit-custom-cases-user-create', array( 'encoderit_user_functionalities', 'add_new_case_by_user' ));
+    //add_submenu_page('', 'Service Update', 'Service Update', 'manage_options', 'scf-encoderit-custom-service-update', 'encoderit_details_subscriber');
+    add_submenu_page('scf-custom-cases-user', 'Add New Case', 'Add New Case', 'read', 'scf-custom-cases-user-create', array( 'encoderit_user_functionalities', 'add_new_case_by_user' ));
 
-    add_submenu_page('options.php', 'Case View', 'Case View', 'read', 'encoderit-custom-cases-user-view', array( 'encoderit_user_functionalities', 'view_single_case' ));
+    add_submenu_page('options.php', 'Case View', 'Case View', 'read', 'scf-custom-cases-user-view', array( 'encoderit_user_functionalities', 'view_single_case' ));
 
  }
 

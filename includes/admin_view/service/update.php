@@ -37,7 +37,7 @@ if(isset($_POST['btn'])){
       {
         ?>
         <script>
-          window.location.href='<?=admin_url() . '?page=encoderit-custom-services'?>'
+          window.location.href='<?=admin_url() . '?page=scf-custom-services'?>'
         </script>
         <?php
       }

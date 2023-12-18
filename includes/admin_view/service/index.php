@@ -139,7 +139,7 @@ class EncoderITCustomForm extends WP_List_Table
                     'Service Price'             =>'$ '. $singledata->service_price,
                     'Active Status'             =>$active_status[$singledata->active_status],
                     'Created At'                => $singledata->created_at,
-                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=encoderit-custom-service-update&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Update</a>',
+                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=scf-encoderit-custom-service-update&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Update</a>',
                 );
                 $sl++;
             }
@@ -215,7 +215,7 @@ $pbwp_products->prepare_items();
 <div class="wrap pbwp">
     <div>
         <h1 class="pbwp-headingtag pbwp-mb-4 pbwp-p-1">Service Lists</h1>
-        <button onclick="location.href='<?=admin_url() .'admin.php'. '?page=encoderit-custom-service-create'?>'">Add New Service</button>
+        <button onclick="location.href='<?=admin_url() .'admin.php'. '?page=scf-custom-service-create'?>'">Add New Service</button>
     </div>
     <div class="pbwp-mt-3">
         <form method="post" class="pbwp-d-inline" style="display: none;">

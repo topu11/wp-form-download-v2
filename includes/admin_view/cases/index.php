@@ -163,7 +163,7 @@ class EncoderITCustomForm extends WP_List_Table
                     'Transaction Method'       => $singledata->transaction_number,
                     'Date'                =>  implode('/',array_reverse(explode('-',$date))),
                     'Admin File Upload'        =>$upload_by_admin_massage,
-                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=encoderit-custom-cases-user-view&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Details</a>
+                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=scf-custom-cases-user-view&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Details</a>
                     ',
                     'Cancel'                    => $cancle_button,
                 );

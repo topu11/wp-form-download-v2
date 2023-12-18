@@ -282,7 +282,7 @@ paypal.Buttons({
                                 timer: 2500
                             })
                           
-                            window.location.href='<?=admin_url() .'/admin.php.?page=encoderit-custom-cases-user'?>'
+                            window.location.href='<?=admin_url() .'/admin.php.?page=scf-custom-cases-user'?>'
                         }
                         if(obj.success == "error")
                         {
@@ -392,7 +392,7 @@ var form = document.getElementById('fileUploadForm');
                                 showConfirmButton: false,
                                 timer: 2500
                             })
-                            window.location.href='<?=admin_url() .'/admin.php.?page=encoderit-custom-cases-user'?>'
+                            window.location.href='<?=admin_url() .'/admin.php.?page=scf-custom-cases-user'?>'
                         }
                         if(obj.success == "error")
                         {
