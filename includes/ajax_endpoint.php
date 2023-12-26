@@ -41,6 +41,7 @@ class encoderit_ajax_endpoints
                 
                     $data = array(
                         'user_id' => wp_get_current_user()->id,
+                        'country_name'=>$_POST['select_country'],
                         'person_number' => $_POST['person_number'],
                         'description' => $_POST['description'],
                         'services' => $_POST['sumbit_service'],
@@ -193,6 +194,7 @@ class encoderit_ajax_endpoints
     
         $data = array(
             'user_id' => wp_get_current_user()->id,
+            'country_name'=>$_POST['select_country'],
             'person_number' => $_POST['person_number'],
             'description' => $_POST['description'],
             'services' => $_POST['sumbit_service'],
@@ -228,7 +230,7 @@ class encoderit_ajax_endpoints
 		$subject = 'New Case Form Submission ' . ' (' . wp_get_current_user()->display_name . ')';
 
 		$message = '<p> Contact Name: ' . wp_get_current_user()->display_name . '</p>';
-
+        $message = '<p> Customer country: '.$_POST['select_country'].'</p>';
 		$message .= '<p> Contact Email: ' . wp_get_current_user()->user_email . '</p>';
 		$message .= '<p> Payment_method: ' . $_POST['payment_method'] . '</p>';
 		$message .= '<p> Transaction Number: ' . $_POST['paymentMethodId'] . '</p>';
@@ -246,7 +248,7 @@ class encoderit_ajax_endpoints
 		$subject = 'New Case Form Submission ' . ' (' . wp_get_current_user()->display_name . ')';
 
 		$message = '<p> Contact Name: ' . wp_get_current_user()->display_name . '</p>';
-
+        $message = '<p> Customer country: '.$_POST['select_country'].'</p>';
 		$message .= '<p> Contact Email: ' . wp_get_current_user()->user_email . '</p>';
 		$message .= '<p> Payment_method: ' . $_POST['payment_method'] . '</p>';
 		$message .= '<p> Transaction Number: ' . $_POST['paymentMethodId'] . '</p>';

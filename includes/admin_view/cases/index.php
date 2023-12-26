@@ -73,6 +73,7 @@ class EncoderITCustomForm extends WP_List_Table
         $columns = array(
             "Case No." => "Case No.",
             "Amount" => "Amount",
+            "Country" => "Country",
             "Submitted By" => "Submitted By",
             "Payment Method" => "Payment Method",
             "Transaction Method" => "Transaction Method",
@@ -158,6 +159,7 @@ class EncoderITCustomForm extends WP_List_Table
                 $data[] = array(
                     'Case No.'                    => '#'.$singledata->id,
                     'Amount'              => '<p class='.$cancle_class.' $ >'. $singledata->total_price.'</p>',
+                    'Country'             =>$singledata->country_name,
                     'Submitted By'             =>'<a  href="' .admin_url() .'user-edit.php'. '?user_id='.$singledata->user_id.'" class="'.$cancle_class.' case_no_cancel_check" target="_blank">'.get_user_by('ID',$singledata->user_id)->display_name.'</a>',
                     'Payment Method'          => $singledata->payment_method,
                     'Transaction Method'       => $singledata->transaction_number,
@@ -189,6 +191,7 @@ class EncoderITCustomForm extends WP_List_Table
         switch ($column_name) {
             case "Case No.":
             case "Amount":
+            case "Country":
             case "Submitted By":
             case "Date":
             case "Payment Method":

@@ -11,6 +11,9 @@
   
 
   jQuery(document).ready(function () {
+    
+    jQuery("#select_country").select2();
+
     jQuery("#addFile").on("click", function (e) {
       e.preventDefault();
       var newInput =
@@ -249,6 +252,7 @@ paypal.Buttons({
             formdata.append('description',description);
             formdata.append('person_number',person_number);
             var custom_file=document.getElementsByClassName("file_add");
+            var select_country=jQuery('#select_country').find(":selected").text();
             for(var i=0;i<custom_file.length;i++)
             {
 
@@ -256,6 +260,7 @@ paypal.Buttons({
 
             }
             formdata.append('total_price',total_price);
+            formdata.append('select_country',select_country);
             formdata.append('payment_method',payment_method);
             formdata.append('paymentMethodId',paypal_tansaction_id);
             formdata.append('paypal_transaction_name',paypal_transaction_name);
@@ -363,6 +368,7 @@ var form = document.getElementById('fileUploadForm');
             formdata.append('description',description);
             formdata.append('person_number',person_number);
             var custom_file=document.getElementsByClassName("file_add");
+            var select_country=jQuery('#select_country').find(":selected").text();
             for(var i=0;i<custom_file.length;i++)
             {
 
@@ -370,6 +376,7 @@ var form = document.getElementById('fileUploadForm');
 
             }
             formdata.append('total_price',total_price);
+            formdata.append('select_country',select_country);
             formdata.append('payment_method',payment_method);
             formdata.append('action','enoderit_custom_form_submit');
             formdata.append('nonce','<?php echo wp_create_nonce('admin_ajax_nonce_encoderit_custom_form') ?>')
@@ -422,5 +429,31 @@ var form = document.getElementById('fileUploadForm');
      
      
 });
+
+jQuery('#select_country').on('change',function(e){
+  e.preventDefault();
+  swal.showLoading();
+  var formdata = new FormData();
+  formdata.append('country_id',jQuery(this).val());
+  formdata.append('action','enoderit_get_service_by_country');
+  formdata.append('nonce','<?php echo wp_create_nonce('admin_ajax_nonce_encoderit_custom_form') ?>')
+  jQuery.ajax({
+    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+    type: 'post',
+    processData: false,
+    contentType: false,
+    processData: false,
+    data: formdata,
+    success: function(data) {
+      Swal.fire({
+        title: "Service loaded",
+        icon: "success",
+        timer: 1000
+      });
+       jQuery('#service_container').html(data);
+     }
+        });
+})
+
 
 </script>

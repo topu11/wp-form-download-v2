@@ -1,5 +1,14 @@
 <?php
- require_once( WP_PLUGIN_DIR . '/SuncodeIT-Custom-Form'.'/assets/css/main.php' ); 
+ require_once( WP_PLUGIN_DIR . '/SuncodeIT-Custom-Form'.'/assets/css/main.php' );
+ global $wpdb;
+ $table_name=$wpdb->prefix . 'encoderit_country_with_code';
+ $result = $wpdb->get_results("SELECT * FROM " . $table_name . "");
+ $html='<option>Please select country</option>';
+ foreach ($result as $singledata)
+ {
+     $html .='<option value='.$singledata->id.'>'.$singledata->country_name.'</option>';
+ }
+ 
 ?>
 <div style="padding: 30px">
   <h1>Add New Case</h1>
@@ -42,37 +51,20 @@
         <div id="files"></div>
       </div>
     </div>
-
+    <div class="row_d">
+      <div class="titel_col">
+        <label for="">Country:</label>
+      </div>
+      <div class="right_col product__container">
+        <select name="select_country" id="select_country"><?=$html?></select>
+      </div>
+    </div>
     <div class="row_d services_row">
       <div class="titel_col">
         <label for="">Services:</label>
       </div>
-      <div class="right_col product__container">
-        <?php
-global $wpdb;
-$table_name = $wpdb->prefix . 'encoderit_custom_form_services';
-$get_all_services = $wpdb->get_results("SELECT * FROM " . $table_name . "
-        where active_status = 2 ORDER BY id DESC");foreach ($get_all_services as
-    $key => $value) {?>
-        <div class="product__item d-flex-center">
-          <input
-            type="checkbox"
-            class="encoder_it_custom_services"
-            data-price="<?=$value->service_price?>"
-            onclick="add_total_price(this.id)"
-            id="encoder_it_custom_services<?=$value->id?>"
-            name="encoder_it_custom_services[]"
-            value="<?=$value->id?>"
-          />
-          <label class="d-flex-center">
-            <span><?=$value->service_name?>...................</span>
-            <span>$<?=$value->service_price?></span>
-          </label>
-        </div>
-        <?php
-}
-
-?>
+      <div class="right_col product__container" id="service_container">
+        
       </div>
     </div>
 

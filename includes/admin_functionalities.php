@@ -148,4 +148,57 @@ class encoderit_admin_functionalities
             return;
          }
     }
+
+    public static function enoderit_get_country_code()
+    {
+        global $wpdb;
+        $table_name=$wpdb->prefix . 'encoderit_country_with_code';
+        $result = $wpdb->get_results("SELECT * FROM " . $table_name . "");
+        $html='';
+        foreach ($result as $singledata)
+        {
+            $html .='<option value='.$singledata->id.'>'.$singledata->country_name.'</option>';
+        }
+        echo $html;
+        wp_die();
+    }
+    public function enoderit_get_service_by_country()
+    {
+        global $wpdb;
+        $country_id=$_POST['country_id'];
+        $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
+        $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
+
+        $sql="SELECT * FROM $encoderit_service_with_country JOIN $encoderit_custom_form_services ON $encoderit_service_with_country.service_id=$encoderit_custom_form_services.id WHERE $encoderit_service_with_country.is_active=1 and $encoderit_service_with_country.country_id=$country_id";
+        $result = $wpdb->get_results($sql);
+        $html='';
+        if(!empty($result))
+        {
+            foreach($result as $key=>$value)
+            {
+                 $html .='<div class="product__item d-flex-center">
+                 <input
+                   type="checkbox"
+                   class="encoder_it_custom_services"
+                   data-price="'.$value->price.'"
+                   onclick="add_total_price(this.id)"
+                   id="encoder_it_custom_services'.$value->service_id.'"
+                   name="encoder_it_custom_services[]"
+                   value="'.$value->id.'"
+                 />
+                 <label class="d-flex-center">
+                   <span>'.$value->service_name.' .........................</span>
+                   <span>$'.$value->price.'</span>
+                 </label>
+               </div>';
+    
+            }
+        }else
+        {
+            $html='<p>No service Found For this Country</p>';
+        }
+        
+        echo $html;
+        wp_die();
+    }
 }

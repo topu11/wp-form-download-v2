@@ -17,6 +17,8 @@ global $wpdb;
   $files_by_admin=json_decode($result->files_by_admin,true);
   //var_dump($files_by_admin);
   $service_ids='('.$result->services.')';
+  $country_name=$result->country_name;
+  
   if(empty($result))
   {
     ?>
@@ -40,7 +42,14 @@ global $wpdb;
                 <span style="font-size: 24px; font-weight:900"><?=$result->person_number?></span>
             </div>
         </div>
-
+        <div class="row_d">
+            <div class="titel_col">
+                <label for="">Country:</label>
+            </div>
+            <div class="right_col">
+                <p style="font-size: 15px; font-weight:900"><?=$country_name?></p>
+            </div>
+        </div>
         <div class="row_d">
             <div class="titel_col">
                 <label for="">Description:</label>
@@ -78,9 +87,23 @@ global $wpdb;
             <div class="right_col product__container">
                 <?php
         global $wpdb;
-        $table_name = $wpdb->prefix . 'encoderit_custom_form_services';
-        $get_all_services = $wpdb->get_results("SELECT * FROM " . $table_name . "
-                where id in $service_ids");
+       
+        $encoderit_country_with_code=$wpdb->prefix . 'encoderit_country_with_code';        
+    
+        $country=$wpdb->get_row("SELECT id from " . $encoderit_country_with_code . "
+        where country_name = '$country_name'");
+        $country_id=$country->id;
+         
+       
+
+        $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
+        $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
+        
+        $sql="SELECT * FROM $encoderit_service_with_country JOIN $encoderit_custom_form_services ON $encoderit_service_with_country.service_id=$encoderit_custom_form_services.id WHERE $encoderit_custom_form_services.id in $service_ids and $encoderit_service_with_country.country_id=$country_id";
+        
+        
+        $get_all_services = $wpdb->get_results($sql);
+
                 foreach ($get_all_services as $key => $value) 
                 {
                     ?>
@@ -88,7 +111,7 @@ global $wpdb;
                     <input type="checkbox" class="encoder_it_custom_services" checked disabled/>
                     <label class="d-flex-center">
                         <span><?= $value->service_name ?>...................</span>
-                        <span>$<?= $value->service_price ?></span>
+                        <span>$<?= $value->price ?></span>
                     </label>
                 </div>
                 <?php

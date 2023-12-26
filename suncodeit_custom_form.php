@@ -22,6 +22,8 @@
 
  register_activation_hook(__FILE__, array( 'encoderit_create_custom_table', 'create_custom_tables' ));
 
+ register_deactivation_hook(__FILE__, array( 'encoderit_create_custom_table', 'drop_custom_tables' ));
+
  add_action( 'admin_menu', 'admin_menu' );
 
  function admin_menu()
@@ -60,7 +62,9 @@ function admin_enqueue_scripts_load()
 
    wp_register_script('encoderit_custom_form_js_zs_zip', 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',array(),ENCODER_IT_CUSTOM_FORM_SUBMIT);
 
-   //wp_enqueue_style('encoderit_admin_custom_plugin_css',plugins_url('assets/css/custom.css',__FILE__ ), array(), ENCODER_IT_CUSTOM_FORM_SUBMIT);
+   wp_register_script('encoderit_select_2_js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',array(),ENCODER_IT_CUSTOM_FORM_SUBMIT);
+
+   wp_enqueue_style('encoderit_select_2_css','https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), ENCODER_IT_CUSTOM_FORM_SUBMIT);
 
   wp_localize_script('encoderit_custom_form_js_admin', 'action_url_ajax', array(
    'ajax_url' => admin_url('admin-ajax.php'),
@@ -71,6 +75,7 @@ function admin_enqueue_scripts_load()
    wp_enqueue_script('encoderit_custom_form_sweet_alert_admin');
    wp_enqueue_script('encoderit_custom_form_js_zs_zip');
    wp_enqueue_script('encoderit_custom_form_js_admin');
+   wp_enqueue_script('encoderit_select_2_js');
 
 	wp_enqueue_media();
 
@@ -85,6 +90,8 @@ add_action('wp_ajax_enoderit_custom_form_cancle_form', array('encoderit_ajax_end
 add_action('wp_ajax_enoderit_custom_form_restore_form', array('encoderit_ajax_endpoints','enoderit_custom_form_restore_form'));
 add_action('wp_ajax_enoderit_custom_form_admin_submit', array('encoderit_admin_functionalities','enoderit_custom_form_admin_submit'));
 
+add_action('wp_ajax_enoderit_get_country_code', array('encoderit_admin_functionalities','enoderit_get_country_code'));
+add_action('wp_ajax_enoderit_get_service_by_country', array('encoderit_admin_functionalities','enoderit_get_service_by_country'));
 
 if (!function_exists('encoderit_download_button_avaialbe')) {
    function encoderit_download_button_avaialbe($updated_at)
@@ -129,5 +136,24 @@ if (!function_exists('encoderit_download_button_avaialbe_time_expire')) {
       }
    }
 }
+if (!function_exists('encoder_get_countries_service_id')) {
+   function encoder_get_countries_service_id($service_id)
+   {
+      global $wpdb;
+      $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
+      $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
+      $encoderit_country_with_code =$wpdb->prefix . 'encoderit_country_with_code';
+
+      $sql="SELECT $encoderit_country_with_code.country_name FROM $encoderit_country_with_code WHERE $encoderit_country_with_code.id IN (SELECT $encoderit_service_with_country.country_id FROM $encoderit_service_with_country WHERE $encoderit_service_with_country.service_id =$service_id)";
+      $result = $wpdb->get_results($sql);
+      $country_name=[];
+      foreach($result as $value)
+      {
+         array_push($country_name,$value->country_name);
+      }
+      return implode(',',$country_name);
+   }
+}
+
 
 // Add custom stylesheet to change row color for the custom table

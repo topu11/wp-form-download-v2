@@ -73,8 +73,8 @@ class EncoderITCustomForm extends WP_List_Table
         $columns = array(
             "SL No." => "SL No.",
             "Service Name" => "Service Name",
-            "Service Price" => "Service Price",
-            "Active Status"  =>"Active Status",
+            "Countries" => "Countries",
+            "Created At" =>"Created At",
             'Action'  => 'Action'
         );
 
@@ -136,8 +136,7 @@ class EncoderITCustomForm extends WP_List_Table
                 $data[] = array(
                     'SL No.'                    => $sl,
                     'Service Name'              => $singledata->service_name,
-                    'Service Price'             =>'$ '. $singledata->service_price,
-                    'Active Status'             =>$active_status[$singledata->active_status],
+                    'Countries'                 =>encoder_get_countries_service_id($singledata->id),
                     'Created At'                => $singledata->created_at,
                     'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=scf-encoderit-custom-service-update&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Update</a>',
                 );
@@ -163,8 +162,7 @@ class EncoderITCustomForm extends WP_List_Table
         switch ($column_name) {
             case "SL No.":
             case "Service Name":
-            case "Service Price":
-            case "Active Status":
+            case "Countries":
             case "Created At":
             case 'Action':
                 return $item[$column_name];

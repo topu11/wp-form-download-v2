@@ -10,41 +10,58 @@ global $wpdb;
 $table_name = $wpdb->prefix . 'encoderit_custom_form_services'; 
 $row_service = $wpdb->get_row("SELECT * FROM " . $table_name . " where id =$id");
 
+$encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
+$encoderit_country_with_code = $wpdb->prefix . 'encoderit_country_with_code';
+
+$sql="SELECT *from $encoderit_service_with_country JOIN $encoderit_country_with_code ON $encoderit_service_with_country.country_id = $encoderit_country_with_code.id where $encoderit_service_with_country.service_id=$id";
+
+$encoderit_service_with_country_price = $wpdb->get_results($sql);
+//print_r($encoderit_service_with_country_price);
+
 if(isset($_POST['btn'])){
  
-  if(!is_numeric($_POST["service_price"]))
-  {
-     echo "<h1>Can Not Insert Non Numeric data error</h1>";
-  }else
-  {
-    
+  
     $table_name = $wpdb->prefix . 'encoderit_custom_form_services';
 
       $data = array(
         "service_name" => $_POST["service_name"],
-        "service_price" => $_POST["service_price"],
-        "active_status" => $_POST["active_status"],
         "updated_at" => date('Y-m-d H:i:s')
       );
-
         $where_condition=array(
             'id' => $id
         );
      
-       $inserted=$wpdb->update($table_name, $data, $where_condition);
-      
-      if($inserted)
-      {
-        ?>
-        <script>
-          window.location.href='<?=admin_url() . '?page=scf-custom-services'?>'
-        </script>
-        <?php
-      }
-    
-  }
+       $update_service_table=$wpdb->update($table_name, $data, $where_condition);
+       $table_updated_encoderit_service_with_country=$wpdb->prefix . 'encoderit_service_with_country';
+          foreach($_POST['country_names'] as $key=>$value)
+          {
+            if(!empty($_POST['service_prices'][$key]))
+            {
+              $info = array(
+                'service_id' => $id,
+                'country_id' => $_POST['country_names'][$key],
+                'price'=>$_POST['service_prices'][$key],
+                'is_active'=>$_POST['is_active'][$key],
+            );
+            $where_condition=array(
+                'country_id' => $value,
+                'service_id'=>$id
+            );
+            $updated_encoderit_service_with_country=$wpdb->update($table_updated_encoderit_service_with_country, $info, $where_condition);
+            if ($updated_encoderit_service_with_country === FALSE || $updated_encoderit_service_with_country < 1) {
+              $sql="SELECT * FROM " . $table_updated_encoderit_service_with_country . " WHERE country_id = '$value' and service_id=$id ";
+              $result=$wpdb->get_results($sql);
+              if (count($result) == 0)
+              {
 
-
+                $wpdb->insert($table_updated_encoderit_service_with_country, $info);  
+              }
+          }
+            }
+          }  
+       ?>
+        <script>location.reload()</script>
+       <?php
 }
   
   
@@ -89,26 +106,78 @@ input.buttons {
   background: #e7e6e6 url(MarketPlace-images/button.jpg) repeat-x;
   border: 1px solid #dadada;
 }
-
+.flex{
+  display: flex;
+}
 </style>
 <div style="padding: 30px;">
 <h1>Add New Service</h1>
   <form action="" method='POST' enctype="multipart/form-data">
     <label for="">Service Name:</label>
     <input type="text" name="service_name" value="<?=$row_service->service_name?>" style="width:100%;" required>
-    
     <label for="">Service Price:</label>
-
-    <input type="text" name="service_price" value="<?=$row_service->service_price?>" style="width:100%;" required>
-    <label for="">Service Status:</label>
-    <select id="active_status" name="active_status" required >
-       
-    <option value="2" <?php if($row_service->active_status == 2) echo 'selected'; ?>>Active</option>
-    <option value="1" <?php if ($row_service->active_status == 1) echo 'selected'; ?>>InActive</option>
-
-    </select>
+    <?php 
+    foreach($encoderit_service_with_country_price as $value)
+    {
+      
+      ?>
+          <div class="file_item flex">
+          <div><label for="">Country:</label><select class="country_names" name="country_names[]"><option value="<?=$value->country_id?>"><?=$value->country_name?></option></select></div>
+          <div><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]" value="<?=$value->price?>"></div>
+          <div><label for="">Is Active:</label><select class="country_names" name="is_active[]"><option value="1" <?php if($value->is_active == 1) echo 'selected'; ?>>Active</option><option value="0" <?php if($value->is_active == 0) echo 'selected'; ?>>Inactive</option></select></div>
+        </div> 
+      <?php
+    }
+    
+    ?>
+    <div id="services_div"></div> 
+    <button id="addFile" style="display: none;">Add Country</button>
+    
     <br>
     <br>
     <input class="buttons" type="submit" name="btn">    
   </form>
 </div>
+<script>
+  jQuery(document).ready(function () {
+          
+           let country_options=null;
+           var formdata = new FormData();
+            formdata.append('action','enoderit_get_country_code');
+            formdata.append('nonce','<?php echo wp_create_nonce('admin_ajax_nonce_encoderit_custom_form') ?>')
+            jQuery.ajax({
+                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    processData: false,
+                    data: formdata,
+                    success: function(data) {
+                      country_options=data;
+                      console.log(country_options)
+                      jQuery("#addFile").show();
+                    }
+              });
+              var service_options='<option value="1">Active</option><option value="2">Inactive</option>';
+
+    jQuery("#addFile").on("click", function (e) {
+      e.preventDefault();
+      var newInput =
+      '<div class="file_item flex">';
+      newInput +='<div><label for="">Country:</label><select class="country_names" name="country_names[]">'+country_options+'</select></div>';
+      newInput +='<div><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]"></div>';
+      newInput +='<div><label for="">Is Active:</label><select class="country_names" name="is_active[]">'+service_options+'</select></div>';
+      newInput +='<div><label for="">Remove Button</label><button class="removefile">X</button></div>';
+      newInput +='</div>';         
+      jQuery("#services_div").append(newInput);
+      jQuery('.country_names').select2();
+    });
+
+    jQuery(document).on("click", ".removefile", function (e) {
+     e.preventDefault();
+    jQuery(this).closest(".file_item").remove(); // to get clicked element
+     
+  });
+
+  });
+</script>
