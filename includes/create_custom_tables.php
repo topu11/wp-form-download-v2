@@ -275,7 +275,8 @@ class encoderit_create_custom_table
         self::create_encoderit_encoderit_custom_form_table();
         self::create_encoderit_country_with_code_table();
         self::create_encoderit_service_with_country_table();
-        
+        global $wpdb;
+        $table_name=$wpdb->prefix . 'encoderit_country_with_code';
         $countryList=self::countryList();
 
             foreach($countryList as $key=>$value)
@@ -297,7 +298,7 @@ class encoderit_create_custom_table
         $wpdb->query("DROP TABLE IF EXISTS $table_name");
 
     }
-    public static function create_encoderit_service_with_country_table()
+    public static function  create_encoderit_custom_form_services_table()
     {
         global $wpdb;
        
@@ -308,8 +309,6 @@ class encoderit_create_custom_table
         $sql = "CREATE TABLE IF NOT EXISTS  $table_name (
             `id` BIGINT NOT NULL AUTO_INCREMENT,
             `service_name` VARCHAR(100) NOT NULL,
-            -- `service_price` FLOAT NOT NULL,
-            -- `active_status` TINYINT NOT NULL DEFAULT '1' COMMENT '1 Deactive , 2 Active',
             `created_at` DATETIME NULL DEFAULT NULL,
             `updated_at` DATETIME NULL DEFAULT NULL,
             PRIMARY KEY (`id`)
@@ -318,11 +317,11 @@ class encoderit_create_custom_table
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql ); 
     }
-    public static function create_encoderit_custom_form_services_table()
+    public static function create_encoderit_service_with_country_table()
     {
         global $wpdb;
        
-        $table_name = $wpdb->prefix . 'encoderit_custom_form_services';
+        $table_name = $wpdb->prefix . 'encoderit_service_with_country';
 
        $charset_collate = $wpdb->get_charset_collate();
 
@@ -372,6 +371,7 @@ class encoderit_create_custom_table
     }
     public static function create_encoderit_country_with_code_table()
     {
+        global $wpdb;
         $table_name = $wpdb->prefix . 'encoderit_country_with_code';
 
         $charset_collate = $wpdb->get_charset_collate();
