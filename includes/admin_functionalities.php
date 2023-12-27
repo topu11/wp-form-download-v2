@@ -195,7 +195,7 @@ class encoderit_admin_functionalities
             }
         }else
         {
-            $html='<p>No service Found For this Country</p>';
+            $html='<p>No service found for this country</p>';
         }
         
         echo $html;

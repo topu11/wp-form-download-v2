@@ -3,7 +3,7 @@
  global $wpdb;
  $table_name=$wpdb->prefix . 'encoderit_country_with_code';
  $result = $wpdb->get_results("SELECT * FROM " . $table_name . "");
- $html='<option>Please select country</option>';
+ $html='<option value="0">Please select country</option>';
  foreach ($result as $singledata)
  {
      $html .='<option value='.$singledata->id.'>'.$singledata->country_name.'</option>';
