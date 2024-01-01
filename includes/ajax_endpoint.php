@@ -259,7 +259,7 @@ class encoderit_ajax_endpoints
 
 		wp_mail($to, $subject, $message, $headers);
     }
-    public function enoderit_custom_form_cancle_form()
+    public static function enoderit_custom_form_cancle_form()
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'encoderit_custom_form';
@@ -284,7 +284,7 @@ class encoderit_ajax_endpoints
         wp_die();
     }
 
-    public function enoderit_custom_form_restore_form()
+    public static function enoderit_custom_form_restore_form()
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'encoderit_custom_form';
