@@ -162,7 +162,7 @@ class encoderit_admin_functionalities
         echo $html;
         wp_die();
     }
-    public function enoderit_get_service_by_country()
+    public static function enoderit_get_service_by_country()
     {
         global $wpdb;
         $country_id=$_POST['country_id'];
