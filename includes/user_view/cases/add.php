@@ -1,8 +1,12 @@
 <?php
  require_once( WP_PLUGIN_DIR . '/SuncodeIT-Custom-Form'.'/assets/css/main.php' );
  global $wpdb;
- $table_name=$wpdb->prefix . 'encoderit_country_with_code';
- $result = $wpdb->get_results("SELECT * FROM " . $table_name . "");
+ $encoderit_country_with_code=$wpdb->prefix . 'encoderit_country_with_code';
+ $encoderit_service_with_country=$wpdb->prefix . 'encoderit_service_with_country';
+$sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with_code.id in (SELECT $encoderit_service_with_country.country_id from $encoderit_service_with_country where is_active=1) " ;
+
+ $result = $wpdb->get_results($sql);
+ 
  $html='<option value="0">Please select country</option>';
  foreach ($result as $singledata)
  {

@@ -267,6 +267,7 @@ class encoderit_create_custom_table
             "ZM" => "Zambia",
             "ZW" => "Zimbabwe",
             "AX" => "Åland Islands",
+            "KRG"=>"Kurdistan Region of Iraq"
             );
     } 
     public static function create_custom_tables()

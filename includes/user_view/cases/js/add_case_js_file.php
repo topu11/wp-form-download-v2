@@ -433,6 +433,7 @@ var form = document.getElementById('fileUploadForm');
 jQuery('#select_country').on('change',function(e){
   e.preventDefault();
   swal.showLoading();
+  jQuery('#service_container').fadeOut('fast');
   var formdata = new FormData();
   formdata.append('country_id',jQuery(this).val());
   formdata.append('action','enoderit_get_service_by_country');
@@ -445,11 +446,8 @@ jQuery('#select_country').on('change',function(e){
     processData: false,
     data: formdata,
     success: function(data) {
-      Swal.fire({
-        title: "Service loaded",
-        icon: "success",
-        timer: 1000
-      });
+      swal.close();
+       jQuery('#service_container').fadeIn('slow');
        jQuery('#service_container').html(data);
      }
         });
