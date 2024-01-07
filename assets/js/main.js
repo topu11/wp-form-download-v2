@@ -549,3 +549,98 @@ function restore_the_form(id)
       }
 });
 }
+
+
+function cancle_the_service(id)
+{
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action Change Make it Cancle.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, proceed!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            var service = document.getElementById(id).getAttribute('data-service');
+            var formdata = new FormData();
+                formdata.append('action','enoderit_custom_form_cancle_service');
+                formdata.append('nonce',action_url_ajax.nonce)
+                formdata.append('service',service)
+                jQuery.ajax({
+                  url: action_url_ajax.ajax_url,
+                  type: 'post',
+                  processData: false,
+                  contentType: false,
+                  processData: false,
+                  data: formdata,
+                  success: function(data) {
+                  
+                    const obj = JSON.parse(data);
+                    console.log(obj);
+          
+                      if (obj.success == "success") {
+                          location.reload();
+                      }
+                      if(obj.success == "error")
+                      {
+                      
+                      }
+                  }
+                });
+          } else {
+              // User clicked "Cancel" or closed the dialog
+              Swal.fire('Cancelled', 'The action was cancelled.', 'info');
+              // Add your logic here for cancellation
+          }
+  });
+
+  
+}
+
+function restore_the_service(id)
+{
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'This action Change Make it Restore.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, proceed!'
+  }).then((result) => {
+      if (result.isConfirmed) {
+        var service = document.getElementById(id).getAttribute('data-service');
+        var formdata = new FormData();
+            formdata.append('action','enoderit_custom_form_restore_service');
+            formdata.append('nonce',action_url_ajax.nonce)
+            formdata.append('service',service)
+            jQuery.ajax({
+              url: action_url_ajax.ajax_url,
+              type: 'post',
+              processData: false,
+              contentType: false,
+              processData: false,
+              data: formdata,
+              success: function(data) {
+              
+                const obj = JSON.parse(data);
+                console.log(obj);
+      
+                  if (obj.success == "success") {
+                      location.reload();
+                  }
+                  if(obj.success == "error")
+                  {
+                  
+                  }
+              }
+            });
+      } else {
+          // User clicked "Cancel" or closed the dialog
+          Swal.fire('Cancelled', 'The action was cancelled.', 'info');
+          // Add your logic here for cancellation
+      }
+});
+}

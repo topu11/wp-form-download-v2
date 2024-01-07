@@ -111,7 +111,8 @@ input.buttons {
 }
 </style>
 <div style="padding: 30px;">
-<h1>Add New Service</h1>
+<a href="<?=admin_url() .'admin.php.?page=scf-custom-services'?>" class="button" style="padding:5px 25px;background-color: #2271b1;color: black">Back</a>
+<h1>Update Service</h1>
   <form action="" method='POST' enctype="multipart/form-data">
     <label for="">Service Name:</label>
     <input type="text" name="service_name" value="<?=$row_service->service_name?>" style="width:100%;" required>
@@ -122,9 +123,9 @@ input.buttons {
       
       ?>
           <div class="file_item flex">
-          <div><label for="">Country:</label><select class="country_names" name="country_names[]"><option value="<?=$value->country_id?>"><?=$value->country_name?></option></select></div>
-          <div><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]" value="<?=$value->price?>"></div>
-          <div><label for="">Is Active:</label><select class="country_names" name="is_active[]"><option value="1" <?php if($value->is_active == 1) echo 'selected'; ?>>Active</option><option value="0" <?php if($value->is_active == 0) echo 'selected'; ?>>Inactive</option></select></div>
+          <div style="width: 210px;margin-right:10px"><label for="">Country:</label><select class="country_names" name="country_names[]"><option value="<?=$value->country_id?>"><?=$value->country_name?></option></select></div>
+          <div style="width: 210px;"><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]" value="<?=$value->price?>"></div>
+          <div style="width: 210px;"><label for="">Is Active:</label><select class="country_names" name="is_active[]"><option value="1" <?php if($value->is_active == 1) echo 'selected'; ?>>Active</option><option value="0" <?php if($value->is_active == 0) echo 'selected'; ?>>Inactive</option></select></div>
         </div> 
       <?php
     }

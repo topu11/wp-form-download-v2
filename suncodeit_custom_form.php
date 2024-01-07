@@ -3,7 +3,7 @@
  * Plugin Name:       Suncode IT Custom Form
  * Plugin URI:        https://test.net/
  * Description:       Handle customized form with the plugin.
- * Version:           1.0.15
+ * Version:           1.0.16
  */
 
  define('ENCODER_IT_CUSTOM_FORM_SUBMIT', time());
@@ -93,6 +93,10 @@ add_action('wp_ajax_enoderit_custom_form_admin_submit', array('encoderit_admin_f
 add_action('wp_ajax_enoderit_get_country_code', array('encoderit_admin_functionalities','enoderit_get_country_code'));
 add_action('wp_ajax_enoderit_get_service_by_country', array('encoderit_admin_functionalities','enoderit_get_service_by_country'));
 
+
+add_action('wp_ajax_enoderit_custom_form_cancle_service', array('encoderit_ajax_endpoints','enoderit_custom_form_cancle_service'));
+add_action('wp_ajax_enoderit_custom_form_restore_service', array('encoderit_ajax_endpoints','enoderit_custom_form_restore_service'));
+
 if (!function_exists('encoderit_download_button_avaialbe')) {
    function encoderit_download_button_avaialbe($updated_at)
    {
@@ -157,3 +161,23 @@ if (!function_exists('encoder_get_countries_service_id')) {
 
 
 // Add custom stylesheet to change row color for the custom table
+if (!function_exists('encoder_get_cancel_button')) {
+   function encoder_get_cancel_button($service_id)
+   {
+      global $wpdb;
+      $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
+      $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
+      $encoderit_country_with_code =$wpdb->prefix . 'encoderit_country_with_code';
+
+      $sql="Select *from $encoderit_service_with_country where service_id=$service_id and is_active=1";
+      $result = $wpdb->get_results($sql);
+      if(count($result)==0)
+      {
+         return true;
+      }else
+      {
+         return false;
+      }
+   }
+}
+

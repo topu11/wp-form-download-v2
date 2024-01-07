@@ -107,6 +107,7 @@ input.buttons {
 }
 </style>
 <div style="padding: 30px;">
+<a href="<?=admin_url() .'admin.php.?page=scf-custom-services'?>" class="button" style="padding:5px 25px;background-color: #2271b1;color: black">Back</a>
 <h1>Add New Service</h1>
   <form action="" method='POST' enctype="multipart/form-data">
     <label for="">Service Name:</label>

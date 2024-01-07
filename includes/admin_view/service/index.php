@@ -75,7 +75,8 @@ class EncoderITCustomForm extends WP_List_Table
             "Service Name" => "Service Name",
             "Countries" => "Countries",
             "Created At" =>"Created At",
-            'Action'  => 'Action'
+            'Action'  => 'Action',
+            'Cancle'  => 'Cancle',
         );
 
         return $columns;
@@ -130,15 +131,23 @@ class EncoderITCustomForm extends WP_List_Table
         if (count($result) != 0) {
             $sl = 1;
             foreach ($result as $singledata) {
-                
+                $cancle_class='';
+                $cancle_button='<a  href="javascript:void(0)" class="button" onclick="cancle_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #c82333;color: black">Cancle</a>';
+
+                if(encoder_get_cancel_button($singledata->id))
+                {
+                    $cancle_class='encoder_it_cancled_row';
+                    $cancle_button='<a  href="javascript:void(0)" class="button" onclick="restore_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #009B00;color: black">Restore</a>';
+                }
 
 
                 $data[] = array(
                     'SL No.'                    => $sl,
-                    'Service Name'              => $singledata->service_name,
+                    'Service Name'              => '<p class="'.$cancle_class.' case_no_cancel_check">'. $singledata->service_name.'</p>',
                     'Countries'                 =>encoder_get_countries_service_id($singledata->id),
                     'Created At'                => $singledata->created_at,
-                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=scf-encoderit-custom-service-update&id=' . $singledata->id . '" class="button" target="_blank" style="background-color: #009B00;color: black">Update</a>',
+                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=scf-encoderit-custom-service-update&id=' . $singledata->id . '" class="button" style="background-color: #009B00;color: black">Update</a>',
+                    'Cancle'  => $cancle_button,
                 );
                 $sl++;
             }
@@ -165,6 +174,7 @@ class EncoderITCustomForm extends WP_List_Table
             case "Countries":
             case "Created At":
             case 'Action':
+            case 'Cancle':    
                 return $item[$column_name];
 
             default:
@@ -222,4 +232,10 @@ $pbwp_products->prepare_items();
         </form>
     </div>
     <?php $pbwp_products->display(); ?>
+    <script>
+        if(jQuery('.wp-list-table .case_no_cancel_check').hasClass('encoder_it_cancled_row'))
+            {
+                jQuery('.encoder_it_cancled_row').closest('tr').css('background-color', 'lightcoral');
+            }
+    </script>
 </div>
