@@ -3,7 +3,7 @@
  * Plugin Name:       Suncode IT Custom Form
  * Plugin URI:        https://test.net/
  * Description:       Handle customized form with the plugin.
- * Version:           1.0.16
+ * Version:           1.0.18
  */
 
  define('ENCODER_IT_CUSTOM_FORM_SUBMIT', time());
@@ -180,4 +180,6 @@ if (!function_exists('encoder_get_cancel_button')) {
       }
    }
 }
+
+
 

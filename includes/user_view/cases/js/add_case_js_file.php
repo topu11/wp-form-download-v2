@@ -8,7 +8,7 @@
   let paypal_transaction_status='';
   let paypal_transaction_name='';
   let paypal_transaction_details='';
-  
+  let is_palypal=true;
 
   jQuery(document).ready(function () {
     
@@ -210,7 +210,8 @@ var stripe = Stripe("<?=ENCODER_IT_STRIPE_PK?>");
   /******* Stripe Sections end */
 
 /********** Pay Pal Start Here ******* */
-paypal.Buttons({
+if (typeof paypal !== 'undefined') {
+  paypal.Buttons({
           createOrder: function(data, actions) {
               return actions.order.create({
                   purchase_units: [{
@@ -315,6 +316,11 @@ paypal.Buttons({
               alert('Can Not Pay Zero')
           }
       }).render('#paypal-button-container');
+}else
+{
+  is_palypal=false;
+  jQuery('.payment_method_container #is_paypal_div').hide();
+}
 
 
 
@@ -433,6 +439,8 @@ var form = document.getElementById('fileUploadForm');
 jQuery('#select_country').on('change',function(e){
   e.preventDefault();
   swal.showLoading();
+  jQuery('#encoder_client_service_group').fadeOut('fast');
+  jQuery('#encoder_client_payment_group').fadeOut('fast');
   jQuery('#service_container').fadeOut('fast');
   var formdata = new FormData();
   formdata.append('country_id',jQuery(this).val());
@@ -447,8 +455,18 @@ jQuery('#select_country').on('change',function(e){
     data: formdata,
     success: function(data) {
       swal.close();
+      const obj = JSON.parse(data);
+       jQuery('#encoder_client_service_group').fadeIn('slow');
+       if(obj.is_payment_show)
+       {
+         jQuery('#encoder_client_payment_group').fadeIn('slow');
+       }
        jQuery('#service_container').fadeIn('slow');
-       jQuery('#service_container').html(data);
+       jQuery('#service_container').html(obj.html);
+       if(!is_palypal)
+       {
+        jQuery('.payment_method_container #is_paypal_div').hide();
+       }
      }
         });
 })

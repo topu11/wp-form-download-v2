@@ -165,6 +165,7 @@ class encoderit_admin_functionalities
     public static function enoderit_get_service_by_country()
     {
         global $wpdb;
+        $is_payment_show=false;
         $country_id=$_POST['country_id'];
         $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
         $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
@@ -187,18 +188,19 @@ class encoderit_admin_functionalities
                    value="'.$value->id.'"
                  />
                  <label class="d-flex-center">
-                   <span>'.$value->service_name.' .........................</span>
+                   <span>'.$value->service_name.'</span>
                    <span>$'.$value->price.'</span>
                  </label>
                </div>';
     
             }
+            $is_payment_show=true;
         }else
         {
             $html='<p>No service found for this country</p>';
         }
         
-        echo $html;
+        echo json_encode(['html'=>$html,'is_payment_show'=>$is_payment_show]);
         wp_die();
     }
 }

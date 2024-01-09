@@ -63,7 +63,7 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
         <select name="select_country" id="select_country"><?=$html?></select>
       </div>
     </div>
-    <div class="row_d services_row">
+    <div class="row_d services_row" id="encoder_client_service_group" style="display: none;">
       <div class="titel_col">
         <label for="">Services:</label>
       </div>
@@ -72,13 +72,13 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
       </div>
     </div>
 
-    <div class="row_d">
+    <div class="row_d" id="encoder_client_payment_group" style="display: none;">
       <div class="titel_col">
         <label for="">Selected Payment Method:</label>
       </div>
       <div class="right_col right_total_price">
         <div class="payment_method_container">
-          <div class="item d-flex-center">
+          <div class="item d-flex-center" id="is_paypal_div">
             <input type="radio" name="payment_method" id="encoderit_paypal"  value="Paypal" onclick="check_radio_payment_method(this.id)" />
             <span>Paypal</span>
           </div>
