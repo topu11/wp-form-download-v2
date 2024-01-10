@@ -336,7 +336,7 @@ class encoderit_create_custom_table
             `service_id` BIGINT NOT NULL,
             `country_id` BIGINT NOT NULL,
             `price` FLOAT NOT NULL,
-            `is_active` TINYINT NOT NULL DEFAULT '1' COMMENT '1 Active , 0 DeActive',
+            `is_active` TINYINT NOT NULL DEFAULT '1' COMMENT '1 Active , 0 DeActive 3 Remove',
             `created_at` DATETIME NULL DEFAULT NULL,
             `updated_at` DATETIME NULL DEFAULT NULL,
             PRIMARY KEY (`id`)

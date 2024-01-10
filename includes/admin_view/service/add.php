@@ -141,7 +141,7 @@ input.buttons {
                       jQuery("#addFile").show();
                     }
               });
-              var service_options='<option value="1">Active</option><option value="2">Inactive</option>';
+              var service_options='<option value="1">Active</option><option value="0">Inactive</option>';
 
     jQuery("#addFile").on("click", function (e) {
       e.preventDefault();
