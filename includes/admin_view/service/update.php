@@ -13,7 +13,7 @@ $row_service = $wpdb->get_row("SELECT * FROM " . $table_name . " where id =$id")
 $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
 $encoderit_country_with_code = $wpdb->prefix . 'encoderit_country_with_code';
 
-$sql="SELECT *from $encoderit_service_with_country JOIN $encoderit_country_with_code ON $encoderit_service_with_country.country_id = $encoderit_country_with_code.id where $encoderit_service_with_country.service_id=$id";
+$sql="SELECT *from $encoderit_service_with_country JOIN $encoderit_country_with_code ON $encoderit_service_with_country.country_id = $encoderit_country_with_code.id where $encoderit_service_with_country.service_id=$id and $encoderit_service_with_country.is_active <> 3";
 
 $encoderit_service_with_country_price = $wpdb->get_results($sql);
 //print_r($encoderit_service_with_country_price);
@@ -111,23 +111,28 @@ input.buttons {
 }
 </style>
 <div style="padding: 30px;">
-<a href="<?=admin_url() .'admin.php.?page=scf-custom-services'?>" class="button" style="padding:5px 25px;background-color: #2271b1;color: black">Back</a>
+<a href="<?=admin_url() .'admin.php.?page=scf-custom-services'?>" class="button" style="padding:5px 25px;background-color: #2271b1;color:white">Back</a>
 <h1>Update Service</h1>
   <form action="" method='POST' enctype="multipart/form-data">
     <label for="">Service Name:</label>
     <input type="text" name="service_name" value="<?=$row_service->service_name?>" style="width:100%;" required>
     <label for="">Service Price:</label>
     <?php 
+    $sl=1;
     foreach($encoderit_service_with_country_price as $value)
     {
       
       ?>
-          <div class="file_item flex">
-          <div style="width: 210px;margin-right:10px"><label for="">Country:</label><select class="country_names" name="country_names[]"><option value="<?=$value->country_id?>"><?=$value->country_name?></option></select></div>
+          <div class="file_item flex" id="remove_service_update_row_<?=$sl?>">
+          <div style="width: 210px;margin-right:10px"><label for="">Country:</label><select class="" name="country_names[]"><option value="<?=$value->country_id?>"><?=$value->country_name?></option></select></div>
           <div style="width: 210px;"><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]" value="<?=$value->price?>"></div>
           <div style="width: 210px;"><label for="">Is Active:</label><select class="country_names" name="is_active[]"><option value="1" <?php if($value->is_active == 1) echo 'selected'; ?>>Active</option><option value="0" <?php if($value->is_active == 0) echo 'selected'; ?>>Inactive</option></select></div>
+          <div style="margin-left: 14px;width: 210px;"><label for="">Remove Button</label>
+          <a  href="javascript:void(0)" class="button" data-id="<?=$sl?>" data-country="<?=$value->country_id?>" data-service="<?=$value->service_id?>" id="remove_service_update_<?=$sl?>" onclick="remove_the_service_by_country(this.id)">Delete</a>
+        </div>
         </div> 
       <?php
+      $sl++;
     }
     
     ?>
@@ -165,10 +170,10 @@ input.buttons {
       e.preventDefault();
       var newInput =
       '<div class="file_item flex">';
-      newInput +='<div><label for="">Country:</label><select class="country_names" name="country_names[]">'+country_options+'</select></div>';
-      newInput +='<div><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]"></div>';
-      newInput +='<div><label for="">Is Active:</label><select class="country_names" name="is_active[]">'+service_options+'</select></div>';
-      newInput +='<div><label for="">Remove Button</label><button class="removefile">X</button></div>';
+      newInput +='<div style="width: 210px;margin-right:10px"><label for="">Country:</label><select class="country_names" name="country_names[]">'+country_options+'</select></div>';
+      newInput +='<div style="width: 210px;"><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]"></div>';
+      newInput +='<div style="width: 210px;"><label for="">Is Active:</label><select class="country_names" name="is_active[]">'+service_options+'</select></div>';
+      newInput +='<div style="margin-left: 14px;width: 210px;"><label for="">Remove Button</label><button class="removefile button">X</button></div>';
       newInput +='</div>';         
       jQuery("#services_div").append(newInput);
       jQuery('.country_names').select2();

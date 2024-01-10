@@ -170,7 +170,7 @@ class encoderit_admin_functionalities
         $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
         $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
 
-        $sql="SELECT * FROM $encoderit_service_with_country JOIN $encoderit_custom_form_services ON $encoderit_service_with_country.service_id=$encoderit_custom_form_services.id WHERE $encoderit_service_with_country.is_active=1 and $encoderit_service_with_country.country_id=$country_id";
+        $sql="SELECT * FROM $encoderit_service_with_country JOIN $encoderit_custom_form_services ON $encoderit_service_with_country.service_id=$encoderit_custom_form_services.id WHERE $encoderit_service_with_country.is_active=1 and $encoderit_service_with_country.country_id=$country_id and $encoderit_custom_form_services.is_active=1";
         $result = $wpdb->get_results($sql);
         $html='';
         if(!empty($result))

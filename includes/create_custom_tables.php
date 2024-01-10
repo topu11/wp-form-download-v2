@@ -310,6 +310,7 @@ class encoderit_create_custom_table
         $sql = "CREATE TABLE IF NOT EXISTS  $table_name (
             `id` BIGINT NOT NULL AUTO_INCREMENT,
             `service_name` VARCHAR(100) NOT NULL,
+            `is_active` TINYINT NOT NULL DEFAULT '1' COMMENT '1 Active , 0 DeActive',
             `created_at` DATETIME NULL DEFAULT NULL,
             `updated_at` DATETIME NULL DEFAULT NULL,
             PRIMARY KEY (`id`)

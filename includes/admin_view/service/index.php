@@ -134,7 +134,7 @@ class EncoderITCustomForm extends WP_List_Table
                 $cancle_class='';
                 $cancle_button='<a  href="javascript:void(0)" class="button" onclick="cancle_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #c82333;color: black">Cancle</a>';
 
-                if(encoder_get_cancel_button($singledata->id))
+                if($singledata->is_active == 0)
                 {
                     $cancle_class='encoder_it_cancled_row';
                     $cancle_button='<a  href="javascript:void(0)" class="button" onclick="restore_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #009B00;color: black">Restore</a>';

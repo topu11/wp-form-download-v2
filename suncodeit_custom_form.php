@@ -3,7 +3,7 @@
  * Plugin Name:       Suncode IT Custom Form
  * Plugin URI:        https://test.net/
  * Description:       Handle customized form with the plugin.
- * Version:           1.0.18
+ * Version:           1.0.20
  */
 
  define('ENCODER_IT_CUSTOM_FORM_SUBMIT', time());
@@ -94,8 +94,12 @@ add_action('wp_ajax_enoderit_get_country_code', array('encoderit_admin_functiona
 add_action('wp_ajax_enoderit_get_service_by_country', array('encoderit_admin_functionalities','enoderit_get_service_by_country'));
 
 
+
 add_action('wp_ajax_enoderit_custom_form_cancle_service', array('encoderit_ajax_endpoints','enoderit_custom_form_cancle_service'));
 add_action('wp_ajax_enoderit_custom_form_restore_service', array('encoderit_ajax_endpoints','enoderit_custom_form_restore_service'));
+
+add_action('wp_ajax_enoderit_custom_form_remove_service_country', array('encoderit_ajax_endpoints','enoderit_custom_form_remove_service_country'));
+
 
 if (!function_exists('encoderit_download_button_avaialbe')) {
    function encoderit_download_button_avaialbe($updated_at)

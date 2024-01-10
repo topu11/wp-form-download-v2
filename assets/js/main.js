@@ -644,3 +644,55 @@ function restore_the_service(id)
       }
 });
 }
+
+
+function remove_the_service_by_country(id)
+{
+    
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action Change Make it Cancle.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, proceed!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            var service = document.getElementById(id).getAttribute('data-service');
+            var country = document.getElementById(id).getAttribute('data-country');
+            var formdata = new FormData();
+                formdata.append('action','enoderit_custom_form_remove_service_country');
+                formdata.append('nonce',action_url_ajax.nonce)
+                formdata.append('service',service)
+                formdata.append('country',country)
+                jQuery.ajax({
+                  url: action_url_ajax.ajax_url,
+                  type: 'post',
+                  processData: false,
+                  contentType: false,
+                  processData: false,
+                  data: formdata,
+                  success: function(data) {
+                  
+                    const obj = JSON.parse(data);
+                    
+          
+                      if (obj.success == "success") {
+                        jQuery('#remove_service_update_row_'+document.getElementById(id).getAttribute('data-id')).remove();
+                      }
+                      if(obj.success == "error")
+                      {
+                      
+                      }
+                  }
+                });
+          } else {
+              // User clicked "Cancel" or closed the dialog
+              Swal.fire('Cancelled', 'The action was cancelled.', 'info');
+              // Add your logic here for cancellation
+          }
+  });
+
+  
+}
