@@ -203,4 +203,8 @@ class encoderit_admin_functionalities
         echo json_encode(['html'=>$html,'is_payment_show'=>$is_payment_show]);
         wp_die();
     }
+    public static function render_custom_settings_page()
+    {
+        require_once( dirname( __FILE__ ).'/admin_view/payment_gateway/index.php' );
+    }
 }

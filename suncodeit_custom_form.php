@@ -3,13 +3,23 @@
  * Plugin Name:       Suncode IT Custom Form
  * Plugin URI:        https://test.net/
  * Description:       Handle customized form with the plugin.
- * Version:           1.0.20
+ * Version:           1.0.22
  */
 
  define('ENCODER_IT_CUSTOM_FORM_SUBMIT', time());
- define('ENCODER_IT_STRIPE_PK',"pk_test_51OD1o3HXs2mM51TXR04wpLYzxxWNpOQWZr8Y84oV0Bp5aP1sB0gVic7JqBdrOgQmqYAwT7a9TOfq4UBG5ioifu9F00VwcHhkCb");
- define('ENCODER_IT_STRIPE_SK',"sk_test_51OD1o3HXs2mM51TXAPMu48pbSpxilR2QjxiXEipq60TE8y96wg51zs9qPSDZomhDtYGcmwIFPboEgFaHi1SINsNZ00FZ8b7i8R");
- define('ENCODER_IT_PAYPAL_CLIENT','AVT1TGV_xT-FR1XRXZdKgsyoXIhHf_N4-j26F0W6bYXgLcv4r2jJLu7Bsa1aabiU-0pVGrDFUIdOpvrQ');
+//  define('ENCODER_IT_STRIPE_PK',"pk_test_51OD1o3HXs2mM51TXR04wpLYzxxWNpOQWZr8Y84oV0Bp5aP1sB0gVic7JqBdrOgQmqYAwT7a9TOfq4UBG5ioifu9F00VwcHhkCb");
+//  define('ENCODER_IT_STRIPE_SK',"sk_test_51OD1o3HXs2mM51TXAPMu48pbSpxilR2QjxiXEipq60TE8y96wg51zs9qPSDZomhDtYGcmwIFPboEgFaHi1SINsNZ00FZ8b7i8R");
+//  define('ENCODER_IT_PAYPAL_CLIENT','AVT1TGV_xT-FR1XRXZdKgsyoXIhHf_N4-j26F0W6bYXgLcv4r2jJLu7Bsa1aabiU-0pVGrDFUIdOpvrQ');
+
+ $ENCODER_IT_STRIPE_PK=get_option('ENCODER_IT_STRIPE_PK') ? get_option('ENCODER_IT_STRIPE_PK'): "pk_test_51OD1o3HXs2mM51TXR04wpLYzxxWNpOQWZr8Y84oV0Bp5aP1sB0gVic7JqBdrOgQmqYAwT7a9TOfq4UBG5ioifu9F00VwcHhkCb";
+ //  define('ENCODER_IT_STRIPE_SK";
+ $ENCODER_IT_STRIPE_SK=get_option('ENCODER_IT_STRIPE_SK') ? get_option('ENCODER_IT_STRIPE_SK') : "sk_test_51OD1o3HXs2mM51TXAPMu48pbSpxilR2QjxiXEipq60TE8y96wg51zs9qPSDZomhDtYGcmwIFPboEgFaHi1SINsNZ00FZ8b7i8R";
+ $ENCODER_IT_PAYPAL_CLIENT=get_option('ENCODER_IT_PAYPAL_CLIENT') ? get_option('ENCODER_IT_PAYPAL_CLIENT') : "AVT1TGV_xT-FR1XRXZdKgsyoXIhHf_N4-j26F0W6bYXgLcv4r2jJLu7Bsa1aabiU-0pVGrDFUIdOpvrQ";
+
+
+ define('ENCODER_IT_STRIPE_PK',$ENCODER_IT_STRIPE_PK);
+ define('ENCODER_IT_STRIPE_SK',$ENCODER_IT_STRIPE_SK);
+ define('ENCODER_IT_PAYPAL_CLIENT',$ENCODER_IT_PAYPAL_CLIENT);
 
  require_once( dirname( __FILE__ ).'/includes/create_custom_tables.php' );
  require_once( dirname( __FILE__ ).'/includes/admin_functionalities.php' );
@@ -21,7 +31,6 @@
 
 
  register_activation_hook(__FILE__, array( 'encoderit_create_custom_table', 'create_custom_tables' ));
-
  register_deactivation_hook(__FILE__, array( 'encoderit_create_custom_table', 'drop_custom_tables' ));
 
  add_action( 'admin_menu', 'admin_menu' );
@@ -40,6 +49,15 @@
     add_submenu_page('scf-custom-cases-user', 'Add New Case', 'Add New Case', 'read', 'scf-custom-cases-user-create', array( 'encoderit_user_functionalities', 'add_new_case_by_user' ));
 
     add_submenu_page('options.php', 'Case View', 'Case View', 'read', 'scf-custom-cases-user-view', array( 'encoderit_user_functionalities', 'view_single_case' ));
+
+    add_options_page(
+      'SuncodeIT Settings',        // Page title
+      'SuncodeIT Settings',        // Menu title
+      'manage_options',         // Capability required to access the page
+      'sf-custom-settings-page',   // Menu slug (unique identifier)
+      array( 'encoderit_admin_functionalities', 'render_custom_settings_page' )// Callback function to render the page
+
+  );
 
  }
 
@@ -100,6 +118,8 @@ add_action('wp_ajax_enoderit_custom_form_restore_service', array('encoderit_ajax
 
 add_action('wp_ajax_enoderit_custom_form_remove_service_country', array('encoderit_ajax_endpoints','enoderit_custom_form_remove_service_country'));
 
+add_action('wp_ajax_encoder_it_set_payment_keys', array('encoderit_ajax_endpoints','encoder_it_set_payment_keys'));
+
 
 if (!function_exists('encoderit_download_button_avaialbe')) {
    function encoderit_download_button_avaialbe($updated_at)
@@ -152,7 +172,7 @@ if (!function_exists('encoder_get_countries_service_id')) {
       $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
       $encoderit_country_with_code =$wpdb->prefix . 'encoderit_country_with_code';
 
-      $sql="SELECT $encoderit_country_with_code.country_name FROM $encoderit_country_with_code WHERE $encoderit_country_with_code.id IN (SELECT $encoderit_service_with_country.country_id FROM $encoderit_service_with_country WHERE $encoderit_service_with_country.service_id =$service_id)";
+      $sql="SELECT $encoderit_country_with_code.country_name FROM $encoderit_country_with_code WHERE $encoderit_country_with_code.id IN (SELECT $encoderit_service_with_country.country_id FROM $encoderit_service_with_country WHERE $encoderit_service_with_country.service_id =$service_id and $encoderit_service_with_country.is_active <> 3)";
       $result = $wpdb->get_results($sql);
       $country_name=[];
       foreach($result as $value)

@@ -272,6 +272,10 @@ class encoderit_create_custom_table
     } 
     public static function create_custom_tables()
     {
+        add_option('ENCODER_IT_STRIPE_PK','pk_test_51OD1o3HXs2mM51TXR04wpLYzxxWNpOQWZr8Y84oV0Bp5aP1sB0gVic7JqBdrOgQmqYAwT7a9TOfq4UBG5ioifu9F00VwcHhkCb');
+        add_option('ENCODER_IT_STRIPE_SK','sk_test_51OD1o3HXs2mM51TXAPMu48pbSpxilR2QjxiXEipq60TE8y96wg51zs9qPSDZomhDtYGcmwIFPboEgFaHi1SINsNZ00FZ8b7i8R');
+        add_option('ENCODER_IT_PAYPAL_CLIENT','AVT1TGV_xT-FR1XRXZdKgsyoXIhHf_N4-j26F0W6bYXgLcv4r2jJLu7Bsa1aabiU-0pVGrDFUIdOpvrQ');
+
         self::create_encoderit_custom_form_services_table();
         self::create_encoderit_encoderit_custom_form_table();
         self::create_encoderit_country_with_code_table();

@@ -651,7 +651,7 @@ function remove_the_service_by_country(id)
     
       Swal.fire({
         title: 'Are you sure?',
-        text: 'This action Change Make it Cancle.',
+        text: 'This action Change Make it Remove.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -696,3 +696,4 @@ function remove_the_service_by_country(id)
 
   
 }
+

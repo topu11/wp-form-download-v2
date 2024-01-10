@@ -3,7 +3,9 @@
  global $wpdb;
  $encoderit_country_with_code=$wpdb->prefix . 'encoderit_country_with_code';
  $encoderit_service_with_country=$wpdb->prefix . 'encoderit_service_with_country';
-$sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with_code.id in (SELECT $encoderit_service_with_country.country_id from $encoderit_service_with_country where is_active=1) " ;
+ $encoderit_custom_form_services=$wpdb->prefix . 'encoderit_custom_form_services';
+
+$sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with_code.id in (SELECT $encoderit_service_with_country.country_id from $encoderit_service_with_country join $encoderit_custom_form_services on $encoderit_service_with_country.service_id =$encoderit_custom_form_services.id where $encoderit_service_with_country.is_active=1 and $encoderit_custom_form_services.is_active=1) " ;
 
  $result = $wpdb->get_results($sql);
  
