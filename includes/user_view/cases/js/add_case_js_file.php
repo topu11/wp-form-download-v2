@@ -253,7 +253,7 @@ if (typeof paypal !== 'undefined') {
             formdata.append('description',description);
             formdata.append('person_number',person_number);
             var custom_file=document.getElementsByClassName("file_add");
-            var select_country=jQuery('#select_country').find(":selected").text();
+            var select_country=jQuery('#select_country').find(":selected").val();
             for(var i=0;i<custom_file.length;i++)
             {
 
@@ -374,7 +374,7 @@ var form = document.getElementById('fileUploadForm');
             formdata.append('description',description);
             formdata.append('person_number',person_number);
             var custom_file=document.getElementsByClassName("file_add");
-            var select_country=jQuery('#select_country').find(":selected").text();
+            var select_country=jQuery('#select_country').find(":selected").val();
             for(var i=0;i<custom_file.length;i++)
             {
 

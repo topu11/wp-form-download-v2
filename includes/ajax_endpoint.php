@@ -41,10 +41,10 @@ class encoderit_ajax_endpoints
                 
                     $data = array(
                         'user_id' => wp_get_current_user()->id,
-                        'country_name'=>$_POST['select_country'],
+                        'country_id'=>$_POST['select_country'],
                         'person_number' => $_POST['person_number'],
                         'description' => $_POST['description'],
-                        'services' => $_POST['sumbit_service'],
+                        'services' => enc_get_json_service_price($_POST['sumbit_service'],$_POST['select_country']),
                         'files_by_user' => $json_files_by_user,
                         'payment_method' => $_POST['payment_method'],
                         'transaction_number' => $_POST['paymentMethodId'],
@@ -194,10 +194,10 @@ class encoderit_ajax_endpoints
     
         $data = array(
             'user_id' => wp_get_current_user()->id,
-            'country_name'=>$_POST['select_country'],
+            'country_id'=>$_POST['select_country'],
             'person_number' => $_POST['person_number'],
             'description' => $_POST['description'],
-            'services' => $_POST['sumbit_service'],
+            'services' => enc_get_json_service_price($_POST['sumbit_service'],$_POST['select_country']),
             'files_by_user' => $json_files_by_user,
             'payment_method' => $_POST['payment_method'],
             'transaction_number' => $_POST['paymentMethodId'],

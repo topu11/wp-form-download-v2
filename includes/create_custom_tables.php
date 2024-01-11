@@ -356,7 +356,7 @@ class encoderit_create_custom_table
         $sql = "CREATE TABLE IF NOT EXISTS  $table_name (
             `id` BIGINT NOT NULL AUTO_INCREMENT,
             `user_id` BIGINT NOT NULL,
-            `country_name` VARCHAR(100) NULL, 
+            `country_id` BIGINT NOT NULL, 
             `person_number` MEDIUMINT NOT NULL,
             `description` TEXT NULL DEFAULT NULL,
             `services` TEXT NULL DEFAULT NULL,    

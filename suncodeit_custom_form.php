@@ -3,7 +3,7 @@
  * Plugin Name:       Suncode IT Custom Form
  * Plugin URI:        https://test.net/
  * Description:       Handle customized form with the plugin.
- * Version:           1.0.22
+ * Version:           1.0.24
  */
 
  define('ENCODER_IT_CUSTOM_FORM_SUBMIT', time());
@@ -205,5 +205,38 @@ if (!function_exists('encoder_get_cancel_button')) {
    }
 }
 
+if (!function_exists('enc_get_json_service_price')) {
+   function enc_get_json_service_price($service_ids,$country_id)
+   {
+      global $wpdb;
+      $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
+      $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
+      
 
+      $sql="SELECT $encoderit_custom_form_services.service_name,$encoderit_service_with_country.price FROM $encoderit_custom_form_services JOIN $encoderit_service_with_country ON $encoderit_custom_form_services.id=$encoderit_service_with_country.service_id WHERE $encoderit_custom_form_services.id IN ($service_ids) and $encoderit_service_with_country.country_id=$country_id AND $encoderit_custom_form_services.is_active=1 AND $encoderit_service_with_country.is_active=1";
 
+      $result = $wpdb->get_results($sql);
+      //var_dump($result);
+      $service_jsone=[];
+      foreach($result as $key=>$value)
+      {
+         $single['name']=$value->service_name;
+         $single['price']=$value->price;
+         array_push($service_jsone,$single);
+      }
+      return json_encode($service_jsone);
+   }
+}
+
+if (!function_exists('enc_get_country_name_by_id')) {
+   function enc_get_country_name_by_id($country_id)
+   {
+      global $wpdb;
+      $encoderit_country_with_code = $wpdb->prefix . 'encoderit_country_with_code';
+     
+      $sql="SELECT *from $encoderit_country_with_code where id=$country_id";
+
+      $result = $wpdb->get_row($sql);
+      return $result->country_name;
+   }
+}

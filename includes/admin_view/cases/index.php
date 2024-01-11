@@ -159,7 +159,7 @@ class EncoderITCustomForm extends WP_List_Table
                 $data[] = array(
                     'Case No.'                    => '#'.$singledata->id,
                     'Amount'              => '<p class='.$cancle_class.' $ >'. $singledata->total_price.'</p>',
-                    'Country'             =>$singledata->country_name,
+                    'Country'             =>enc_get_country_name_by_id($singledata->country_id),
                     'Submitted By'             =>'<a  href="' .admin_url() .'user-edit.php'. '?user_id='.$singledata->user_id.'" class="'.$cancle_class.' case_no_cancel_check" target="_blank">'.get_user_by('ID',$singledata->user_id)->display_name.'</a>',
                     'Payment Method'          => $singledata->payment_method,
                     'Transaction Method'       => $singledata->transaction_number,
