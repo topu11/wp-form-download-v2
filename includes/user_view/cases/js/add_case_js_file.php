@@ -438,6 +438,9 @@ var form = document.getElementById('fileUploadForm');
 
 jQuery('#select_country').on('change',function(e){
   e.preventDefault();
+  total_price = 0;
+  temp_price_on_service_check=0;
+  document.getElementById("price").innerText = total_price;
   swal.showLoading();
   jQuery('#encoder_client_service_group').fadeOut('fast');
   jQuery('#encoder_client_payment_group').fadeOut('fast');
