@@ -25,23 +25,23 @@ if(isset($_POST['btn'])){
         $inserted = $wpdb->insert($table_name, $data);
         if($inserted)
         {
-          $sql="SELECT * FROM " . $table_name . " WHERE service_name = '$search_data'";
-          $service_data=$wpdb->get_results($sql);
-          
+          //$sql="SELECT * FROM " . $table_name . " WHERE service_name = '$search_data'";
+          //$service_data=$wpdb->get_results($sql);
+          $service_id=$wpdb->insert_id;
           $table_updated_encoderit_service_with_country=$wpdb->prefix . 'encoderit_service_with_country';
           foreach($_POST['country_names'] as $key=>$value)
           {
             if(!empty($_POST['service_prices'][$key]))
             {
               $info = array(
-                'service_id' => $service_data[0]->id,
+                'service_id' => $service_id,
                 'country_id' => $_POST['country_names'][$key],
                 'price'=>$_POST['service_prices'][$key],
                 'is_active'=>$_POST['is_active'][$key],
             );
             $where_condition=array(
                 'country_id' => $value,
-                'service_id'=>$service_data[0]->id
+                'service_id'=>$service_id
             );
             $updated_encoderit_service_with_country=$wpdb->update($table_updated_encoderit_service_with_country, $info, $where_condition);
             if ($updated_encoderit_service_with_country === FALSE || $updated_encoderit_service_with_country < 1) {
