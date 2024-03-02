@@ -16,9 +16,11 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
  }
  
 ?>
-<div style="padding: 30px">
-  <h1>Add New Case</h1>
-  <form
+<div class="wrap">
+<h1 class="wp-heading-inline">Add new case</h1> 
+
+<div style="padding: 0px">
+   <form
     action=""
     method="POST"
     enctype="multipart/form-data"
@@ -26,7 +28,7 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
   >
     <div class="row_d">
       <div class="titel_col">
-        <label for="">Person number:</label>
+        <label for="">Subject number:</label>
       </div>
       <div class="right_col person_number_col">
         <input type="number" name="person_number" min="1" id="person_number"  value="" required />
@@ -35,7 +37,7 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
 
     <div class="row_d">
       <div class="titel_col">
-        <label for="">Description:</label>
+        <label for="">Vendor request:</label>
       </div>
       <div class="right_col">
         <textarea
@@ -111,5 +113,6 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
       </div>
     </div>
   </form>
+</div>
 </div>
 <?php require_once( dirname( __FILE__ ).'/js/add_case_js_file.php' ); ?>

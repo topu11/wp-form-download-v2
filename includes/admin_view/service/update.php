@@ -71,9 +71,7 @@ if(isset($_POST['btn'])){
 <style type='text/css'>
 /* form elements */
 form {
-  margin:10px; 
-  padding: 0 5px;
-  background: #F5F5F5;  
+  
 }
 label {
   display:block;
@@ -110,12 +108,16 @@ input.buttons {
   display: flex;
 }
 </style>
-<div style="padding: 30px;">
-<a href="<?=admin_url() .'admin.php.?page=scf-custom-services'?>" class="button" style="padding:5px 25px;background-color: #2271b1;color:white">Back</a>
-<h1>Update Service</h1>
+
+
+<div class="wrap pbwp">
+<h1 class="wp-heading-inline">Update Service</h1>
+<a href="<?=admin_url() .'admin.php.?page=scf-custom-services'?>" class="page-title-action" style="padding:5px 25px;background-color: #2271b1;color:white">Back</a>
+
   <form action="" method='POST' enctype="multipart/form-data">
     <label for="">Service Name:</label>
     <input type="text" name="service_name" value="<?=$row_service->service_name?>" style="width:100%;" required>
+    <br><br>
     <label for="">Service Price:</label>
     <?php 
     $sl=1;
@@ -127,8 +129,15 @@ input.buttons {
           <div style="width: 210px;margin-right:10px"><label for="">Country:</label><select class="" name="country_names[]"><option value="<?=$value->country_id?>"><?=$value->country_name?></option></select></div>
           <div style="width: 210px;"><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]" value="<?=$value->price?>"></div>
           <div style="width: 210px;"><label for="">Is Active:</label><select class="country_names" name="is_active[]"><option value="1" <?php if($value->is_active == 1) echo 'selected'; ?>>Active</option><option value="0" <?php if($value->is_active == 0) echo 'selected'; ?>>Inactive</option></select></div>
-          <div style="margin-left: 14px;width: 210px;"><label for="">Remove Button</label>
-          <a  href="javascript:void(0)" class="button" data-id="<?=$sl?>" data-country="<?=$value->country_id?>" data-service="<?=$value->service_id?>" id="remove_service_update_<?=$sl?>" onclick="remove_the_service_by_country(this.id)">Delete</a>
+         
+          <div style="margin-left: 14px;   margin-top: 49px;">
+          <a  href="javascript:void(0)" class="" data-id="<?=$sl?>" data-country="<?=$value->country_id?>" data-service="<?=$value->service_id?>" id="remove_service_update_<?=$sl?>" onclick="remove_the_service_by_country(this.id)">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="    width: 25px;
+    color: #e20000;"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          
+          </a>
+          
         </div>
         </div> 
       <?php
@@ -137,13 +146,15 @@ input.buttons {
     
     ?>
     <div id="services_div"></div> 
-    <button id="addFile" style="display: none;">Add Country</button>
+    <button id="addFile" class="button" style="display: none;margin-top:20px">Add Country</button>
     
     <br>
     <br>
-    <input class="buttons" type="submit" name="btn">    
+    <input class="buttons button-primary" type="submit" value="Save" name="btn">    
   </form>
 </div>
+
+
 <script>
   jQuery(document).ready(function () {
           
@@ -173,7 +184,7 @@ input.buttons {
       newInput +='<div style="width: 210px;margin-right:10px"><label for="">Country:</label><select class="country_names" name="country_names[]">'+country_options+'</select></div>';
       newInput +='<div style="width: 210px;"><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]"></div>';
       newInput +='<div style="width: 210px;"><label for="">Is Active:</label><select class="country_names" name="is_active[]">'+service_options+'</select></div>';
-      newInput +='<div style="margin-left: 14px;width: 210px;"><label for="">Remove Button</label><button class="removefile button">X</button></div>';
+      newInput +='<div style="margin-left: 14px;   margin-top: 49px;"> <a class="removefile" style="cursor:pointer"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="    width: 25px;    color: #e20000;"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>       </a></div>';
       newInput +='</div>';         
       jQuery("#services_div").append(newInput);
       jQuery('.country_names').select2();

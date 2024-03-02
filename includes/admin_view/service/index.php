@@ -132,12 +132,12 @@ class EncoderITCustomForm extends WP_List_Table
             $sl = 1;
             foreach ($result as $singledata) {
                 $cancle_class='';
-                $cancle_button='<a  href="javascript:void(0)" class="button" onclick="cancle_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #c82333;color: black">Cancle</a>';
+                $cancle_button='<a  href="javascript:void(0)" class="button" onclick="cancle_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #c82333;color: #fff">Cancel</a>';
 
                 if($singledata->is_active == 0)
                 {
                     $cancle_class='encoder_it_cancled_row';
-                    $cancle_button='<a  href="javascript:void(0)" class="button" onclick="restore_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #009B00;color: black">Restore</a>';
+                    $cancle_button='<a  href="javascript:void(0)" class="button" onclick="restore_the_service(this.id)" id="admin_cancle_service_id_'.$singledata->id.'" data-service="'.$singledata->id.'" style="background-color: #009B00;color: #fff">Restore</a>';
                 }
 
 
@@ -146,7 +146,7 @@ class EncoderITCustomForm extends WP_List_Table
                     'Service Name'              => '<p class="'.$cancle_class.' case_no_cancel_check">'. $singledata->service_name.'</p>',
                     'Countries'                 =>encoder_get_countries_service_id($singledata->id),
                     'Created At'                => $singledata->created_at,
-                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=scf-encoderit-custom-service-update&id=' . $singledata->id . '" class="button" style="background-color: #009B00;color: black">Update</a>',
+                    'Action'                    => '<a  href="' .admin_url() .'admin.php'. '?page=scf-encoderit-custom-service-update&id=' . $singledata->id . '" class="button" style="background-color: #009B00;color: #fff">Update</a>',
                     'Cancle'  => $cancle_button,
                 );
                 $sl++;

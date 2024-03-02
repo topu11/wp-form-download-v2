@@ -5,7 +5,7 @@ if (!class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
-
+ 
 /**
  * Create a new table class that will extend the WP_List_Table
  */

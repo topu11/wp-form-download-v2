@@ -63,9 +63,6 @@ if(isset($_POST['btn'])){
 <style type='text/css'>
 /* form elements */
 form {
-  margin:10px; 
-  padding: 0 5px;
-  background: #F5F5F5;  
 }
 label {
   display:block;
@@ -106,19 +103,29 @@ input.buttons {
   margin-left:5px ;
 }
 </style>
-<div style="padding: 30px;">
+
+
+<div class="wrap pbwp">
+<h1 class="wp-heading-inline">Add New Service</h1>
+
+
+
+
 <a href="<?=admin_url() .'admin.php.?page=scf-custom-services'?>" class="button" style="padding:5px 25px;background-color: #2271b1;color: white">Back</a>
-<h1>Add New Service</h1>
+
   <form action="" method='POST' enctype="multipart/form-data">
     <label for="">Service Name:</label>
     <input type="text" name="service_name" value="" style="width:100%;" required>
-    
+    <br><br>
     <label for="">Service Price:</label>
     <div id="services_div"></div>
-    <button id="addFile" style="display: none;">Add Country</button>
+    <button id="addFile" class="button" style="display: none;margin-top:20px">Add Country</button>
+
     <br>
     <br>
-    <input class="buttons" type="submit" name="btn">    
+
+    <input class="buttons button-primary" type="submit" value="Save" name="btn">    
+
   </form>
 </div>
 <script>
@@ -150,7 +157,8 @@ input.buttons {
       newInput +='<div><label for="">Country:</label><select class="country_names" name="country_names[]">'+country_options+'</select></div>';
       newInput +='<div><label for="">Service Price:</label><input type="number" min="1"  name="service_prices[]"></div>';
       newInput +='<div><label for="">Is Active:</label><select class="country_names" name="is_active[]">'+service_options+'</select></div>';
-      newInput +='<div><label for="">Remove Button</label><button class="removefile">X</button></div>';
+      newInput +='<div style="margin-left: 14px;   margin-top: 49px;"> <a class="removefile" style="cursor:pointer"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="    width: 25px;    color: #e20000;"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>       </a></div>';
+
       newInput +='</div>';         
       jQuery("#services_div").append(newInput);
       jQuery('.country_names').select2();
