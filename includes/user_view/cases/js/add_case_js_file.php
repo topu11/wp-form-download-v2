@@ -39,6 +39,8 @@
 
   function add_total_price(id) {
      person_number=document.getElementById('person_number').value;
+     var checked_servie=[];
+     temp_price_on_service_check=0;
     //console.log(person_number);
     if(!person_number)
     {
@@ -46,21 +48,45 @@
       swal.fire({text: 'Please select Numer of persons', });
       return ;
     }
-    if (document.getElementById(id).checked) {
-      temp_price_on_service_check =
-      temp_price_on_service_check +
-        parseFloat(document.getElementById(id).getAttribute("data-price"));
-    } else {
-      temp_price_on_service_check =
-      temp_price_on_service_check -
-        parseFloat(document.getElementById(id).getAttribute("data-price"));
+    // if (document.getElementById(id).checked) {
+    //   temp_price_on_service_check =
+    //   temp_price_on_service_check +
+    //     parseFloat(document.getElementById(id).getAttribute("data-price"));
+    // } else {
+    //   temp_price_on_service_check =
+    //   temp_price_on_service_check -
+    //     parseFloat(document.getElementById(id).getAttribute("data-price"));
+    // }
+     
+    var service=document.getElementsByClassName("encoder_it_custom_services");
+    //console.log(service);
+    for(var j=0;j<service.length;j++)
+    {
+      if(service[j].checked)
+      {
+        checked_servie.push(service[j].id);
+      }
     }
+    console.log(checked_servie);
+    for(var k=0;k<checked_servie.length;k++)
+    {
+      if(checked_servie[k]=="encoder_it_custom_servicesfixed_id_1")
+      {
+        temp_price_on_service_check = temp_price_on_service_check + parseFloat(document.getElementById(checked_servie[k]).getAttribute("data-price") *document.getElementById("input_main_applicat_increment").value );
+      }else
+      {
+        temp_price_on_service_check = temp_price_on_service_check + parseFloat(document.getElementById(checked_servie[k]).getAttribute("data-price") * 1);
+      }
+      
+    }
+
     total_price=person_number*temp_price_on_service_check;
     if(total_price <= 0)
     {
       total_price=0;
       temp_price_on_service_check=0;
     }
+
     document.getElementById("price").innerText = total_price;
   }
 
@@ -81,6 +107,9 @@
              }
             add_total_price_by_persons(person_number_on_event)
         });
+
+        
+
 
   function add_total_price_by_persons(number_of_persons)
   {
@@ -113,6 +142,8 @@
   {
     document.getElementById('stripe_payment_div').style.display='none';
     document.getElementById('paypal-button-container').style.display='none'; 
+    document.getElementById('encoderit_bank_transfer').style.display='none'; 
+
 
     var description=document.getElementById('description').value;
     var person_number=document.getElementById('person_number').value;
@@ -138,10 +169,16 @@
     }
     if(total_price == 0 || document.getElementsByClassName("file_add").length == 0 || sumbit_service.length == 0 || person_number == 0 || !description || file_bug)
     {
-       swal.fire({
+      if(id !=="NULL")
+      {
+        swal.fire({
                 text: "please provide all information",
               });
-              document.getElementById(id).checked = false;      
+              
+      }
+              document.getElementById("encoderit_stripe").checked = false;
+              document.getElementById("encoderit_paypal").checked = false; 
+              document.getElementById("encoderit_bank_transfer").checked = false;        
         return false;
          
     }
@@ -158,18 +195,32 @@
     {
        document.getElementById('stripe_payment_div').style.display='block';
        document.getElementById('paypal-button-container').style.display='none';
+
+       document.getElementById('encoderit_bank_transfer').style.display='none';
        /*** Show the Submit Button */
        document.getElementById('encoder_it_submit_btn_user_form').removeAttribute("disabled");
     }else if(id=="encoderit_paypal")
     {
       document.getElementById('stripe_payment_div').style.display='none';
       document.getElementById('paypal-button-container').style.display='block';
+
+      document.getElementById('encoderit_bank_transfer').style.display='none';
       /*** hide the Submit Button */
-      document.getElementById('encoder_it_submit_btn_user_form').setAttribute("disabled");
+      document.getElementById('encoder_it_submit_btn_user_form').setAttribute("disabled",true);
+    }
+    else if(id=="encoderit_bank_transfer")
+    {
+      document.getElementById('stripe_payment_div').style.display='none';
+      document.getElementById('paypal-button-container').style.display='none';
+
+      document.getElementById('encoderit_bank_transfer').style.display='block';
+      /*** hide the Submit Button */
+      document.getElementById('encoder_it_submit_btn_user_form').removeAttribute("disabled");
     }else
     {
       document.getElementById('stripe_payment_div').style.display='none';
       document.getElementById('paypal-button-container').style.display='none';
+      document.getElementById('encoderit_bank_transfer').style.display='none';
        /*** hide the Submit Button */
        document.getElementById('encoder_it_submit_btn_user_form').setAttribute("disabled");
     }
@@ -246,8 +297,26 @@ if (typeof paypal !== 'undefined') {
                     }
                     var description=document.getElementById('description').value;
                     var person_number=document.getElementById('person_number').value;
+
+                    var get_fixed_service=get_fixed_service_information();
+                    var fixed_service_flag=get_fixed_service.is_fixed_service;
+                    var fixed_service_name=get_fixed_service.fixed_service_name;
+                    var fixed_service_price=get_fixed_service.fixed_service_price;
             
             var formdata = new FormData();
+            
+            if(get_fixed_service.is_fixed_service)
+            {
+              formdata.append('is_fixed_service',true);
+              formdata.append('fixed_service_name',fixed_service_name);
+              formdata.append('fixed_service_price',fixed_service_price);
+              if(document.getElementById("encoder_it_custom_servicesfixed_id_1").checked)
+              {
+
+                formdata.append('input_main_applicat_increment',document.getElementById("input_main_applicat_increment").value);
+              }
+            }
+
             formdata.append('paymentMethodId',paypal_tansaction_id);
             formdata.append('sumbit_service',sumbit_service);
             formdata.append('description',description);
@@ -367,12 +436,28 @@ var form = document.getElementById('fileUploadForm');
           } else {
             
             swal.showLoading();
+            var get_fixed_service=get_fixed_service_information();
+
+            var fixed_service_flag=get_fixed_service.is_fixed_service;
+            var fixed_service_name=get_fixed_service.fixed_service_name;
+            var fixed_service_price=get_fixed_service.fixed_service_price;
 
             var formdata = new FormData();
             formdata.append('paymentMethodId',result.paymentMethod.id);
             formdata.append('sumbit_service',sumbit_service);
             formdata.append('description',description);
             formdata.append('person_number',person_number);
+            if(get_fixed_service.is_fixed_service)
+            {
+              formdata.append('is_fixed_service',true);
+              formdata.append('fixed_service_name',fixed_service_name);
+              formdata.append('fixed_service_price',fixed_service_price);
+              if(document.getElementById("encoder_it_custom_servicesfixed_id_1").checked)
+              {
+
+                formdata.append('input_main_applicat_increment',document.getElementById("input_main_applicat_increment").value);
+              }
+            }
             var custom_file=document.getElementsByClassName("file_add");
             var select_country=jQuery('#select_country').find(":selected").val();
             for(var i=0;i<custom_file.length;i++)
@@ -427,6 +512,86 @@ var form = document.getElementById('fileUploadForm');
             });
           }
         });
+     }else if(payment_method =="Bank Transfer")
+     {
+      
+            
+            swal.showLoading();
+            var get_fixed_service=get_fixed_service_information();
+
+            var fixed_service_flag=get_fixed_service.is_fixed_service;
+            var fixed_service_name=get_fixed_service.fixed_service_name;
+            var fixed_service_price=get_fixed_service.fixed_service_price;
+
+            var formdata = new FormData();
+            formdata.append('paymentMethodId',"Pay Later");
+            formdata.append('sumbit_service',sumbit_service);
+            formdata.append('description',description);
+            formdata.append('person_number',person_number);
+            if(get_fixed_service.is_fixed_service)
+            {
+              formdata.append('is_fixed_service',true);
+              formdata.append('fixed_service_name',fixed_service_name);
+              formdata.append('fixed_service_price',fixed_service_price);
+              if(document.getElementById("encoder_it_custom_servicesfixed_id_1").checked)
+              {
+
+                formdata.append('input_main_applicat_increment',document.getElementById("input_main_applicat_increment").value);
+              }
+            }
+            var custom_file=document.getElementsByClassName("file_add");
+            var select_country=jQuery('#select_country').find(":selected").val();
+            for(var i=0;i<custom_file.length;i++)
+            {
+
+              formdata.append('file_array[]', custom_file[i].files[0]);
+
+            }
+            formdata.append('total_price',total_price);
+            formdata.append('select_country',select_country);
+            formdata.append('payment_method',"Pay Later");
+            formdata.append('action','enoderit_custom_form_submit');
+            formdata.append('nonce','<?php echo wp_create_nonce('admin_ajax_nonce_encoderit_custom_form') ?>')
+            jQuery.ajax({
+                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    processData: false,
+                    data: formdata,
+                    success: function(data) {
+                      const obj = JSON.parse(data);
+                      console.log(obj);
+
+                        if (obj.success == "success") {
+                            Swal.fire({
+                                // position: 'top-end',
+                                icon: 'success',
+                                text: 'Your files and Payment is successfully uploaded',
+                                showConfirmButton: false,
+                                timer: 2500
+                            })
+                            window.location.href='<?=admin_url() .'/admin.php.?page=scf-custom-cases-user'?>'
+                        }
+                        if(obj.success == "error")
+                        {
+                          let message_arr=obj.message.split(';')
+                          let html='';
+                          for(let index=0;index<message_arr.length;index++)
+                          {
+                               var temp=message_arr[index]+"\n";
+                               html = html+temp;
+                          }
+                          swal.fire({
+                            
+
+                            text: html,
+                        
+                           });
+                        }
+                    }
+            });
+          
      }
      else
      {
@@ -473,6 +638,98 @@ jQuery('#select_country').on('change',function(e){
      }
         });
 })
+
+
+//  New JS CODE 
+  
+// jQuery(document).on("click", "#get_customized_selection", function (e) {
+//   e.preventDefault();
+//   document.getElementById("fixed_section_service").style.display='none';
+//   document.getElementById("customized_section_service").style.display='block';
+//   document.getElementById("get_customized_selection").style.display='none';
+
+//   check_radio_payment_method("NULL");
+
+// })
+
+jQuery(document).on("click", "#get_customized_selection", function (e) {
+  e.preventDefault();
+  document.getElementById("fixed_section_service").style.display='none';
+  document.getElementById("customized_section_service").style.display='block';
+  document.getElementById("get_customized_selection_undone").style.display='block';
+  document.getElementById("get_customized_selection").style.display='none';
+  total_price = 0;
+  temp_price_on_service_check=0;
+  document.getElementById("price").innerText = total_price;
+
+  var service=document.getElementsByClassName("encoder_it_custom_services");
+  for(var j=0;j<service.length;j++)
+  {
+    service[j].checked = false;
+  }
+  check_radio_payment_method("NULL");
+})
+
+jQuery(document).on("click", "#get_customized_selection_undone", function (e) {
+  e.preventDefault();
+  document.getElementById("fixed_section_service").style.display='block';
+  document.getElementById("customized_section_service").style.display='none';
+  document.getElementById("get_customized_selection_undone").style.display='none';
+  document.getElementById("get_customized_selection").style.display='block';
+  total_price = 0;
+  temp_price_on_service_check=0;
+  document.getElementById("price").innerText = total_price;
+
+  var service=document.getElementsByClassName("encoder_it_custom_services");
+  for(var j=0;j<service.length;j++)
+  {
+    service[j].checked = false;
+  }
+  check_radio_payment_method("NULL");
+})
+
+jQuery(document).on("input", "#input_main_applicat_increment", function (e) {
+  
+  if(document.getElementById("encoder_it_custom_servicesfixed_id_1").checked)
+     {
+      add_total_price("encoder_it_custom_servicesfixed_id_1");
+      console.log("Ad");
+     }
+})
+jQuery(document).on("change", "#input_main_applicat_increment", function (e) {
+  
+  if(document.getElementById("encoder_it_custom_servicesfixed_id_1").checked)
+     {
+      add_total_price("encoder_it_custom_servicesfixed_id_1");
+      console.log("Ad");
+     }
+})
+
+function get_fixed_service_information()
+{
+  var service=document.getElementsByClassName("encoder_it_custom_services");
+  var is_fixed_service=false;
+  var fixed_service_name=[];
+  var fixed_service_price=[];
+  for(var j=0;j<service.length;j++)
+  {
+     if(service[j].checked)
+     {
+      if(service[j].id.includes("encoder_it_custom_servicesfixed_id"))
+      {
+        is_fixed_service=true;
+        fixed_service_name.push(service[j].getAttribute("data-name"));
+        fixed_service_price.push(service[j].getAttribute("data-price"));
+      }
+     }
+  }
+
+  return {
+    'is_fixed_service':is_fixed_service,
+    'fixed_service_name':fixed_service_name,
+    'fixed_service_price':fixed_service_price
+  }
+}
 
 
 </script>

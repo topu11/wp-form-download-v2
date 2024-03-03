@@ -22,14 +22,57 @@ class encoderit_ajax_endpoints
         }
         else
         {
-            if($_POST['payment_method']=="Paypal")
+            if($_POST['payment_method'] == "Paypal")
             {
                 $is_payment_success=self::encode_it_paypal_payment();
                 if(!empty($is_payment_success))
                 {
                     echo $is_payment_success;
                 } 
-            }else
+            }
+            elseif($_POST['payment_method'] == "Pay Later")
+            {
+                $json_files_by_user=self::save_files_by_user();
+                    global $wpdb;
+                    $table_name = $wpdb->prefix . 'encoderit_custom_form';
+                    if(isset($_POST['is_fixed_service']))
+                    {
+                        $services=self::enc_get_json_service_price_fixed_service();
+                    }else
+                    {
+                      $services=enc_get_json_service_price($_POST['sumbit_service'],$_POST['select_country']);
+                    }
+                    $data = array(
+                        'user_id' => wp_get_current_user()->id,
+                        'country_id'=>$_POST['select_country'],
+                        'person_number' => $_POST['person_number'],
+                        'description' => $_POST['description'],
+                        'services' =>  $services,
+                        'files_by_user' => $json_files_by_user,
+                        'payment_method' => $_POST['payment_method'],
+                        'transaction_number' => $_POST['paymentMethodId'],
+                        'total_price' => $_POST['total_price'],
+                        'created_at' => date('Y-m-d H:i:s'),
+                    );
+                    
+                    $inserted=$wpdb->insert($table_name, $data);
+                    if($inserted)
+                    {
+                        self::send_mail();
+                        self::send_mail_client();
+                        echo  json_encode([
+                            'success' => 'success',
+                            'message'=>'Form Submmited Successfully'
+                        ]);
+                    }else
+                    {
+                        echo  json_encode([
+                            'success' => 'error',
+                            'message'=>'Something worng.;'
+                        ]);
+                    } 
+            }
+            else
             {
                 $encode_it_stripe_payment_return=self::encode_it_stripe_payment();
                 $decoded_stripe=json_decode($encode_it_stripe_payment_return,true);
@@ -38,13 +81,19 @@ class encoderit_ajax_endpoints
                     $json_files_by_user=self::save_files_by_user();
                     global $wpdb;
                     $table_name = $wpdb->prefix . 'encoderit_custom_form';
-                
+                    if(isset($_POST['is_fixed_service']))
+                    {
+                        $services=self::enc_get_json_service_price_fixed_service();
+                    }else
+                    {
+                      $services=enc_get_json_service_price($_POST['sumbit_service'],$_POST['select_country']);
+                    }
                     $data = array(
                         'user_id' => wp_get_current_user()->id,
                         'country_id'=>$_POST['select_country'],
                         'person_number' => $_POST['person_number'],
                         'description' => $_POST['description'],
-                        'services' => enc_get_json_service_price($_POST['sumbit_service'],$_POST['select_country']),
+                        'services' =>  $services,
                         'files_by_user' => $json_files_by_user,
                         'payment_method' => $_POST['payment_method'],
                         'transaction_number' => $_POST['paymentMethodId'],
@@ -191,13 +240,19 @@ class encoderit_ajax_endpoints
         $json_files_by_user=self::save_files_by_user();
         global $wpdb;
         $table_name = $wpdb->prefix . 'encoderit_custom_form';
-    
+        if(isset($_POST['is_fixed_service']))
+        {
+            $services=self::enc_get_json_service_price_fixed_service();
+        }else
+        {
+          $services=enc_get_json_service_price($_POST['sumbit_service'],$_POST['select_country']);
+        }
         $data = array(
             'user_id' => wp_get_current_user()->id,
             'country_id'=>$_POST['select_country'],
             'person_number' => $_POST['person_number'],
             'description' => $_POST['description'],
-            'services' => enc_get_json_service_price($_POST['sumbit_service'],$_POST['select_country']),
+            'services' =>  $services,
             'files_by_user' => $json_files_by_user,
             'payment_method' => $_POST['payment_method'],
             'transaction_number' => $_POST['paymentMethodId'],
@@ -410,5 +465,32 @@ class encoderit_ajax_endpoints
         echo $message;
         wp_die();
     } 
-
+    public static function enc_get_json_service_price_fixed_service()
+    {
+        $service=[];
+        $fixed_service_name_arr=explode(',',$_POST['fixed_service_name']);
+        $fixed_service_price_arr=explode(',',$_POST['fixed_service_price']);
+        foreach($fixed_service_name_arr as $key=>$value)
+        {
+            
+            $single['name']=$value;
+            $single['price']=$fixed_service_price_arr[$key];
+            if($value == "Main Applicant" && isset($_POST['input_main_applicat_increment']))
+            {
+                $single['is_count']=true;
+                $single['input_main_applicat_increment']=$_POST['input_main_applicat_increment'];
+            }else
+            {
+                $single['is_count']=false;
+                $single['input_main_applicat_increment']=null;
+            }
+            //var_dump($single);
+            //exit;
+            array_push($service,$single);
+        }
+        
+        $services['is_fixed_service']=true;
+        $services['service']=$service;
+        return json_encode($services);
+}
 }

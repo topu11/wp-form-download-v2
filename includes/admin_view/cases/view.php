@@ -88,19 +88,45 @@ global $wpdb;
                 <?php
                  
                 // var_dump($get_all_services);
-                 
-                foreach ($get_all_services as $key => $value) 
-                {
-                    ?>
-                <div class="product__item d-flex-center">
-                    <input type="checkbox" class="encoder_it_custom_services" checked disabled/>
-                    <label class="d-flex-center">
-                        <span><?= $value['name'] ?></span>
-                        <span>$<?= $value['price'] ?></span>
-                    </label>
-                </div>
-                <?php
-         }
+                 if(array_key_exists("is_fixed_service",$get_all_services))
+                 {
+                    foreach ($get_all_services['service'] as $key => $value) 
+                    {
+                        ?>
+                    <div class="product__item d-flex-center">
+                        <input type="checkbox" class="encoder_it_custom_services" checked disabled/>
+                        <label class="d-flex-center">
+                            <span><?= $value['name'] ?></span>
+                            
+                            <?php 
+                            if($value['is_count'])
+                            {
+                                ?>
+                                <spna><?=$value['input_main_applicat_increment']?> X</spna>
+                                <?php
+                            }
+                            ?>
+                            <span>$<?= $value['price'] ?></span>
+                        </label>
+                    </div>
+                    <?php
+                    }
+
+                 }else
+                 {
+                    foreach ($get_all_services as $key => $value) 
+                    {
+                        ?>
+                    <div class="product__item d-flex-center">
+                        <input type="checkbox" class="encoder_it_custom_services" checked disabled/>
+                        <label class="d-flex-center">
+                            <span><?= $value['name'] ?></span>
+                            <span>$<?= $value['price'] ?></span>
+                        </label>
+                    </div>
+                    <?php
+                   }
+                 }
 
        ?>
             </div>
