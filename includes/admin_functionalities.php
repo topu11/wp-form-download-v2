@@ -172,7 +172,9 @@ class encoderit_admin_functionalities
 
         $sql="SELECT * FROM $encoderit_service_with_country JOIN $encoderit_custom_form_services ON $encoderit_service_with_country.service_id=$encoderit_custom_form_services.id WHERE $encoderit_service_with_country.is_active=1 and $encoderit_service_with_country.country_id=$country_id and $encoderit_custom_form_services.is_active=1";
         $result = $wpdb->get_results($sql);
-        $html='<h4>You can select and change the service here</h4>';
+        $html ='<button id="get_customized_selection_undone" style="display:none">Get Previous</button>';
+        $html .='<button id="get_customized_selection" style="margin:10px">Customize Your Selections</button>';
+        $html .='<h4>You can select and change the service here</h4>';
         $html .='<div id="fixed_section_service">';
         foreach(self::fiexed_service() as $key=>$value)
         {
@@ -219,7 +221,7 @@ class encoderit_admin_functionalities
         }
   
         $html .='</div>';
-       $html .='<button id="get_customized_selection" style="margin:10px">Customize Your Selections</button>';
+        $html .='<div style="display:flex;justify-content: flex-end"><button  id="add_new_fixed_service">Add More</button></div>';
 
 
        $html .='<div id="customized_section_service"  style="display:none">';
@@ -250,8 +252,8 @@ class encoderit_admin_functionalities
         {
             $html .='<p>No service found for this country</p>';
         }
-        $html .='</div><button id="get_customized_selection_undone" style="display:none">Get Previous</button>';
-
+        $html .='</div>';
+       // $html .='<button id="get_customized_selection_undone" style="display:none">Get Previous</button>';
         echo json_encode(['html'=>$html,'is_payment_show'=>$is_payment_show]);
         wp_die();
     }

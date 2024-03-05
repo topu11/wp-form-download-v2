@@ -34,15 +34,13 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
         <select name="select_country" id="select_country"><?=$html?></select>
       </div>
     </div>
+    <!-- <div class="row_d">
+    <div class="right_col product__container">
+    <button id="get_customized_selection" style="margin:10px">Customize Your Selections</button>
+    <button id="get_customized_selection_undone" style="display:none">Get Previous</button>
+      </div>
+    </div> -->
     
-    <div class="row_d">
-      <div class="titel_col">
-        <label for="">Subject number:</label>
-      </div>
-      <div class="right_col person_number_col">
-        <input type="number" name="person_number" min="1" id="person_number"  value="1" required />
-      </div>
-    </div>
 
     <div class="row_d services_row" id="encoder_client_service_group" style="display: none;">
       <div class="titel_col">
@@ -52,7 +50,18 @@ $sql="SELECT * FROM   $encoderit_country_with_code where $encoderit_country_with
         
       </div>
     </div>
-
+    
+    <div id="person_number_div" style="display: none;">
+      <div class="row_d">
+        <div class="titel_col">
+          <label for="">Subject number:</label>
+        </div>
+        <div class="right_col person_number_col">
+          <input type="number" name="person_number" min="1" id="person_number"  value="1" required />
+        </div>
+      </div>
+    </div>
+    
    
 
     <div class="row_d">

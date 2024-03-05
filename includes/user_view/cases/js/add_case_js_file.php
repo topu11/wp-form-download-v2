@@ -44,6 +44,7 @@
     //console.log(person_number);
     if(!person_number)
     {
+      alert();
       document.getElementById(id).checked = false;   
       swal.fire({text: 'Please select Numer of persons', });
       return ;
@@ -73,13 +74,24 @@
       if(checked_servie[k]=="encoder_it_custom_servicesfixed_id_1")
       {
         temp_price_on_service_check = temp_price_on_service_check + parseFloat(document.getElementById(checked_servie[k]).getAttribute("data-price") *document.getElementById("input_main_applicat_increment").value );
+        
       }else
       {
         temp_price_on_service_check = temp_price_on_service_check + parseFloat(document.getElementById(checked_servie[k]).getAttribute("data-price") * 1);
+
       }
       
     }
-
+    var custom_service=document.getElementsByClassName("fixed_custom_services_add_more");
+    var custom_service_label=document.getElementsByClassName("add_service_label");
+        
+    for(var i=0;i<custom_service.length;i++)
+    {
+        if(custom_service[i].checked && custom_service_label[i].value !="")
+        {
+          temp_price_on_service_check=temp_price_on_service_check+200;
+        }
+    }
     total_price=person_number*temp_price_on_service_check;
     if(total_price <= 0)
     {
@@ -668,6 +680,8 @@ jQuery(document).on("click", "#get_customized_selection", function (e) {
     service[j].checked = false;
   }
   check_radio_payment_method("NULL");
+  document.getElementById("add_new_fixed_service").style.display='none';
+  document.getElementById("person_number_div").style.display='block';
 })
 
 jQuery(document).on("click", "#get_customized_selection_undone", function (e) {
@@ -676,6 +690,10 @@ jQuery(document).on("click", "#get_customized_selection_undone", function (e) {
   document.getElementById("customized_section_service").style.display='none';
   document.getElementById("get_customized_selection_undone").style.display='none';
   document.getElementById("get_customized_selection").style.display='block';
+  
+  document.getElementById("add_new_fixed_service").style.display='block';
+  document.getElementById("person_number_div").style.display='none';
+
   total_price = 0;
   temp_price_on_service_check=0;
   document.getElementById("price").innerText = total_price;
@@ -723,13 +741,47 @@ function get_fixed_service_information()
       }
      }
   }
-
+    var custom_service=document.getElementsByClassName("fixed_custom_services_add_more");
+    var custom_service_label=document.getElementsByClassName("add_service_label");
+        
+    for(var i=0;i<custom_service.length;i++)
+    {
+        if(custom_service[i].checked && custom_service_label[i].value !="")
+        {
+          is_fixed_service=true;
+          fixed_service_name.push(custom_service_label[i].value);
+          fixed_service_price.push(200);
+        }
+    }
   return {
     'is_fixed_service':is_fixed_service,
     'fixed_service_name':fixed_service_name,
     'fixed_service_price':fixed_service_price
   }
 }
+
+jQuery(document).on('click','#add_new_fixed_service',function(e){
+  e.preventDefault();
+  
+  var newInput =`<div class="product__item d-flex-center">
+                <input type="checkbox" class="fixed_custom_services_add_more"  id="abc_x" onclick="add_total_price(this.id)"  name="encoder_it_custom_services[]" value="fixed_id_7">
+                <label class="d-flex-center">
+                  <span><input type="text" class="add_service_label"></span>
+                  <span>$200</span>
+                </label>
+                <button class="removeservice">X</button>
+              </div>`;
+      jQuery("#fixed_section_service").append(newInput);
+})
+
+jQuery(document).on('click','.removeservice',function(e){
+ e.preventDefault();
+ jQuery(this).closest("div").remove();
+ add_total_price("NULL");
+})
+
+// Example: Generate a random number between 10 and 100
+
 
 
 </script>
