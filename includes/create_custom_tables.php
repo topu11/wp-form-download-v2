@@ -280,6 +280,7 @@ class encoderit_create_custom_table
         self::create_encoderit_encoderit_custom_form_table();
         self::create_encoderit_country_with_code_table();
         self::create_encoderit_service_with_country_table();
+        self::create_encoderit_fixed_service_with_country_table();
         global $wpdb;
         $table_name=$wpdb->prefix . 'encoderit_country_with_code';
         $countryList=self::countryList();
@@ -392,5 +393,25 @@ class encoderit_create_custom_table
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql );
     }
+    public static function create_encoderit_fixed_service_with_country_table()
+    {
+        global $wpdb;
+       
+        $table_name = $wpdb->prefix . 'encoderit_fixed_service_with_country';
 
+       $charset_collate = $wpdb->get_charset_collate();
+
+        $sql = "CREATE TABLE IF NOT EXISTS  $table_name (
+            `id` BIGINT NOT NULL AUTO_INCREMENT,
+            `country_id` BIGINT NOT NULL,
+            `service_json` TEXT NULL DEFAULT NULL,
+            `is_active` TINYINT NOT NULL DEFAULT '1' COMMENT '1 Active , 0 DeActive',
+            `created_at` DATETIME NULL DEFAULT NULL,
+            `updated_at` DATETIME NULL DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) $charset_collate;";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $sql );
+    }
 }

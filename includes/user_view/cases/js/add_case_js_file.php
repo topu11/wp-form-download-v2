@@ -89,7 +89,7 @@
     {
         if(custom_service[i].checked && custom_service_label[i].value !="")
         {
-          temp_price_on_service_check=temp_price_on_service_check+200;
+          temp_price_on_service_check=temp_price_on_service_check+parseFloat(document.getElementById("fixed_service_others_price").value);
         }
     }
     total_price=person_number*temp_price_on_service_check;
@@ -647,6 +647,15 @@ jQuery('#select_country').on('change',function(e){
        {
         jQuery('.payment_method_container #is_paypal_div').hide();
        }
+         
+        if(obj.fixed_service_others_price_flag)
+        {
+          jQuery('#fixed_service_others_price').val(obj.fixed_service_others_price_value)
+        }else
+        {
+          jQuery('#add_new_fixed_service').hide();
+        }
+        
      }
         });
 })
@@ -741,18 +750,24 @@ function get_fixed_service_information()
       }
      }
   }
-    var custom_service=document.getElementsByClassName("fixed_custom_services_add_more");
-    var custom_service_label=document.getElementsByClassName("add_service_label");
+
+  var fixed_service_others_price=jQuery('#fixed_service_others_price').val();
+   if(fixed_service_others_price != 0)
+   {
+      var custom_service=document.getElementsByClassName("fixed_custom_services_add_more");
+      var custom_service_label=document.getElementsByClassName("add_service_label");
         
-    for(var i=0;i<custom_service.length;i++)
-    {
-        if(custom_service[i].checked && custom_service_label[i].value !="")
-        {
-          is_fixed_service=true;
-          fixed_service_name.push(custom_service_label[i].value);
-          fixed_service_price.push(200);
-        }
-    }
+      for(var i=0;i<custom_service.length;i++)
+      {
+          if(custom_service[i].checked && custom_service_label[i].value !="")
+          {
+            is_fixed_service=true;
+            fixed_service_name.push(custom_service_label[i].value);
+            fixed_service_price.push(fixed_service_others_price);
+          }
+      }
+   }
+    
   return {
     'is_fixed_service':is_fixed_service,
     'fixed_service_name':fixed_service_name,
@@ -762,12 +777,12 @@ function get_fixed_service_information()
 
 jQuery(document).on('click','#add_new_fixed_service',function(e){
   e.preventDefault();
-  
+  var fixed_service_others_price=jQuery('#fixed_service_others_price').val();
   var newInput =`<div class="product__item d-flex-center">
                 <input type="checkbox" class="fixed_custom_services_add_more"  id="abc_x" onclick="add_total_price(this.id)"  name="encoder_it_custom_services[]" value="fixed_id_7">
                 <label class="d-flex-center">
                   <span><input type="text" class="add_service_label"></span>
-                  <span>$200</span>
+                  <span class="other_service_price_string">$${fixed_service_others_price}</span>
                 </label>
                 <button class="removeservice">X</button>
               </div>`;

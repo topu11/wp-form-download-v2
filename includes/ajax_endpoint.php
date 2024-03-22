@@ -492,5 +492,56 @@ class encoderit_ajax_endpoints
         $services['is_fixed_service']=true;
         $services['service']=$service;
         return json_encode($services);
-}
+    }
+    public static function enoderit_custom_form_cancle_fixed_service()
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'encoderit_fixed_service_with_country';
+        if (!wp_verify_nonce($_POST['nonce'], 'user_zip_download_suncode')) {
+            echo json_encode([
+                'success' => 'error',
+                'message'=>'Invalid Nonce field'
+            ]);
+        }else
+        {
+            $data = array(
+                'is_active' => 0,
+            );
+            $where_condition=array(
+                'id' => $_POST['service']
+            );
+           $wpdb->update($table_name, $data, $where_condition);
+            echo  json_encode([
+                'success' => 'success',
+            ]);
+        }
+        
+        wp_die();
+    }
+
+    public static function enoderit_custom_form_restore_fixed_service()
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'encoderit_fixed_service_with_country';
+        if (!wp_verify_nonce($_POST['nonce'], 'user_zip_download_suncode')) {
+            echo json_encode([
+                'success' => 'error',
+                'message'=>'Invalid Nonce field'
+            ]);
+        }else
+        {
+            $data = array(
+                'is_active' => 1,
+            );
+            $where_condition=array(
+                'id' => $_POST['service']
+            );
+            $wpdb->update($table_name, $data, $where_condition);
+            echo  json_encode([
+                'success' => 'success',
+            ]);
+        }
+        
+        wp_die();
+    }
 }

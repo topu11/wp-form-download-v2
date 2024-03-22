@@ -3,7 +3,7 @@
  * Plugin Name:       Suncode IT Custom Form
  * Plugin URI:        https://test.net/
  * Description:       Handle customized form with the plugin.
- * Version:           1.0.30
+ * Version:           1.0.35
  */
 
  define('ENCODER_IT_CUSTOM_FORM_SUBMIT', time());
@@ -43,12 +43,20 @@
 
     add_submenu_page('scf-custom-services', 'Add new Service', 'Add new Service', 'manage_options', 'scf-custom-service-create', array( 'encoderit_admin_functionalities', 'add_new_service' ));
 
+    
+
     add_menu_page('Cases', 'Cases', 'read', 'scf-custom-cases-user',array( 'encoderit_user_functionalities', 'get_all_case_by_user' ), 'dashicons-admin-generic', 4);
 
     //add_submenu_page('', 'Service Update', 'Service Update', 'manage_options', 'scf-encoderit-custom-service-update', 'encoderit_details_subscriber');
     add_submenu_page('scf-custom-cases-user', 'Add New Case', 'Add New Case', 'read', 'scf-custom-cases-user-create', array( 'encoderit_user_functionalities', 'add_new_case_by_user' ));
 
     add_submenu_page('options.php', 'Case View', 'Case View', 'read', 'scf-custom-cases-user-view', array( 'encoderit_user_functionalities', 'view_single_case' ));
+   
+
+    add_menu_page('Fixed Services', 'Fixed Services', 'manage_options', 'scf-fixed-service-list', array( 'encoderit_admin_functionalities', 'fixed_service_list'),'dashicons-admin-generic',4);
+    add_submenu_page('scf-fixed-service-list', 'Add new Country', 'Add new Country', 'manage_options', 'scf-fixed-service-create', array( 'encoderit_admin_functionalities', 'fixed_service_create' ));
+    add_submenu_page('options.php', 'Fixed Services', 'Fixed Services', 'manage_options', 'scf-encoderit-fixed-service-update', array( 'encoderit_admin_functionalities', 'fixed_service_update' ));
+
 
     add_options_page(
       'SuncodeIT Settings',        // Page title
@@ -116,10 +124,14 @@ add_action('wp_ajax_enoderit_get_service_by_country', array('encoderit_admin_fun
 add_action('wp_ajax_enoderit_custom_form_cancle_service', array('encoderit_ajax_endpoints','enoderit_custom_form_cancle_service'));
 add_action('wp_ajax_enoderit_custom_form_restore_service', array('encoderit_ajax_endpoints','enoderit_custom_form_restore_service'));
 
+add_action('wp_ajax_enoderit_custom_form_restore_fixed_service', array('encoderit_ajax_endpoints','enoderit_custom_form_restore_fixed_service'));
+add_action('wp_ajax_enoderit_custom_form_cancle_fixed_service', array('encoderit_ajax_endpoints','enoderit_custom_form_cancle_fixed_service'));
+
 add_action('wp_ajax_enoderit_custom_form_remove_service_country', array('encoderit_ajax_endpoints','enoderit_custom_form_remove_service_country'));
 
 add_action('wp_ajax_encoder_it_set_payment_keys', array('encoderit_ajax_endpoints','encoder_it_set_payment_keys'));
 
+add_action('wp_ajax_fixed_service_save', array('encoderit_admin_functionalities','fixed_service_save'));
 
 if (!function_exists('encoderit_download_button_avaialbe')) {
    function encoderit_download_button_avaialbe($updated_at)
@@ -238,5 +250,33 @@ if (!function_exists('enc_get_country_name_by_id')) {
 
       $result = $wpdb->get_row($sql);
       return $result->country_name;
+   }
+}
+
+if (!function_exists('encoder_get_countries_fixed_service_id')) {
+   function encoder_get_countries_fixed_service_id($service_id)
+   {
+      global $wpdb;
+      $encoderit_fixed_service_with_country = $wpdb->prefix . 'encoderit_fixed_service_with_country';
+      
+      $encoderit_country_with_code =$wpdb->prefix . 'encoderit_country_with_code';
+
+      $sql="SELECT $encoderit_country_with_code.country_name,$encoderit_fixed_service_with_country.service_json FROM $encoderit_fixed_service_with_country INNER JOIN $encoderit_country_with_code ON $encoderit_fixed_service_with_country.country_id=$encoderit_country_with_code.id and $encoderit_fixed_service_with_country.is_active <> 3 and $encoderit_fixed_service_with_country.id=$service_id";
+      $result = $wpdb->get_row($sql);
+     
+      $country_name=[];
+   
+      foreach(json_decode($result->service_json,true) as $key=>$value)
+      {
+         $services[]=$value['service_name'];
+         $prices[]=$value['service_price'];
+      }
+      
+      return[
+         'country'=>$result->country_name,
+         'service_name'=> implode(',',$services),
+         'prices'=> implode(',',$prices)
+      ];
+
    }
 }

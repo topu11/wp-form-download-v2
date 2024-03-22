@@ -169,15 +169,258 @@ class encoderit_admin_functionalities
         $country_id=$_POST['country_id'];
         $encoderit_service_with_country = $wpdb->prefix . 'encoderit_service_with_country';
         $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
+        
+        $encoderit_fixed_service_with_country = $wpdb->prefix . 'encoderit_fixed_service_with_country';
+        $encoderit_custom_form_services = $wpdb->prefix . 'encoderit_custom_form_services';
 
         $sql="SELECT * FROM $encoderit_service_with_country JOIN $encoderit_custom_form_services ON $encoderit_service_with_country.service_id=$encoderit_custom_form_services.id WHERE $encoderit_service_with_country.is_active=1 and $encoderit_service_with_country.country_id=$country_id and $encoderit_custom_form_services.is_active=1";
         $result = $wpdb->get_results($sql);
+
+        $sql_fixed_service="SELECT * FROM $encoderit_fixed_service_with_country where $encoderit_fixed_service_with_country.country_id=$country_id and $encoderit_fixed_service_with_country.is_active=1";
+        $sql_fixed_service_result = $wpdb->get_results($sql_fixed_service);
+        
+        $nhtml=self::both_fixed_variable_service($result,$sql_fixed_service_result);
+        // if(!empty($result) && !empty($sql_fixed_service_result))
+        // {
+            
+           
+    
+        // }elseif(empty($result) && !empty($sql_fixed_service_result))
+        // {
+        //     self::only_fixed_service($sql_fixed_service_result);
+        // }elseif(!empty($result) && empty($sql_fixed_service_result))
+        // {
+        //     self::only_variable_service($result);
+        // }
+
+    //     $html ='<button id="get_customized_selection_undone" style="display:none">Get Previous</button>';
+    //     $html .='<button id="get_customized_selection" style="margin:10px">Customize Your Selections</button>';
+    //     $html .='<h4>You can select and change the service here</h4>';
+    //     $html .='<div id="fixed_section_service">';
+    //     foreach(self::fiexed_service() as $key=>$value)
+    //     {
+    //         if($value['is_input'])
+    //         {
+    //             $html .='<div class="product__item d-flex-center">
+    //             <input
+    //               type="checkbox"
+    //               class="encoder_it_custom_services"
+    //               data-price="'.$value['service_price'].'"
+    //               data-name="'.$value['service_name'].'"
+    //               onclick="add_total_price(this.id)"
+    //               id="encoder_it_custom_services'.$value['service_id'].'"
+    //               name="encoder_it_custom_services[]"
+    //               value="'.$value['service_id'].'"
+    //             />
+    //             <label class="d-flex-center">
+    //               <span>'.$value['service_name'].'</span>
+    //               <span>$'.$value['service_price'].'</span>
+    //               <span> X </span>
+    //             <input type="number" min="1" id="input_main_applicat_increment" value="1">
+    //             </label>
+    //           </div>';
+    //         }else
+    //         {
+    //             $html .='<div class="product__item d-flex-center">
+    //             <input
+    //               type="checkbox"
+    //               class="encoder_it_custom_services"
+    //               data-price="'.$value['service_price'].'"
+    //               data-name="'.$value['service_name'].'"
+    //               onclick="add_total_price(this.id)"
+    //               id="encoder_it_custom_services'.$value['service_id'].'"
+    //               name="encoder_it_custom_services[]"
+    //               value="'.$value['service_id'].'"
+    //             />
+    //             <label class="d-flex-center">
+    //               <span>'.$value['service_name'].'</span>
+    //               <span>$'.$value['service_price'].'</span>
+    //             </label>
+    //           </div>';
+    //         }
+            
+    //     }
+  
+    //     $html .='</div>';
+    //     $html .='<div style="display:flex;justify-content: flex-end"><button  id="add_new_fixed_service">Add More</button></div>';
+
+
+    //    $html .='<div id="customized_section_service"  style="display:none">';
+    //     if(!empty($result))
+    //     {
+            
+    //         foreach($result as $key=>$value)
+    //         {
+    //              $html .='<div class="product__item d-flex-center">
+    //              <input
+    //                type="checkbox"
+    //                class="encoder_it_custom_services"
+    //                data-price="'.$value->price.'"
+    //                onclick="add_total_price(this.id)"
+    //                id="encoder_it_custom_services'.$value->service_id.'"
+    //                name="encoder_it_custom_services[]"
+    //                value="'.$value->id.'"
+    //              />
+    //              <label class="d-flex-center">
+    //                <span>'.$value->service_name.'</span>
+    //                <span>$'.$value->price.'</span>
+    //              </label>
+    //            </div>';
+    
+    //         }
+    //         //$is_payment_show=true;
+    //     }else
+    //     {
+    //         $html .='<p>No service found for this country</p>';
+    //     }
+    //     $html .='</div>';
+       // $html .='<button id="get_customized_selection_undone" style="display:none">Get Previous</button>';
+        echo json_encode(
+            [
+                'html'=>$nhtml['html'],
+                'is_payment_show'=>$nhtml['is_payment_show'],
+                'fixed_service_others_price_value'=>$nhtml['fixed_service_others_price_value'],
+                'fixed_service_others_price_flag'=>$nhtml['fixed_service_others_price_flag'],
+                'is_payment_show'=>$nhtml['is_payment_show'],
+          ]);
+        wp_die();
+    }
+    public static function render_custom_settings_page()
+    {
+        require_once( dirname( __FILE__ ).'/admin_view/payment_gateway/index.php' );
+    }
+
+    public static function fiexed_service()
+    {
+        return [
+            [
+                'service_name'=>'Main Applicant',
+                'service_price'=>'1000',
+                'service_id'=>'fixed_id_1',
+                'is_input'=>true,
+            ],
+            [
+                'service_name'=>'Spouse Dependent',
+                'service_price'=>'500',
+                'service_id'=>'fixed_id_2',
+                'is_input'=>false,
+            ],
+            [
+                'service_name'=>'Adult Dependent',
+                'service_price'=>'400',
+                'service_id'=>'fixed_id_3',
+                'is_input'=>false,
+            ],
+            [
+                'service_name'=>'Second Adult Dependent ',
+                'service_price'=>'300',
+                'service_id'=>'fixed_id_4',
+                'is_input'=>false,
+            ],
+            [
+                'service_name'=>'Third Adult Dependent',
+                'service_price'=>'200',
+                'service_id'=>'fixed_id_5',
+                'is_input'=>false,
+            ],
+            [
+                'service_name'=>'Fourth Adult Dependent',
+                'service_price'=>'200',
+                'service_id'=>'fixed_id_6',
+                'is_input'=>false,
+            ],
+            [
+                'service_name'=>'Fifth Adult Dependent ',
+                'service_price'=>'200',
+                'service_id'=>'fixed_id_7',
+                'is_input'=>false,
+            ],
+            [
+                'service_name'=>'Others',
+                'service_price'=>'200',
+                'service_id'=>'fixed_id_8',
+                'is_input'=>false,
+            ],
+        ];
+    }
+    public static function fixed_service_create()
+    {
+        require_once( dirname( __FILE__ ).'/admin_view/service/add_fixed_services.php' );
+    }
+    public static function fixed_service_save()
+    {
+        
+        global $wpdb;
+       
+        $checked_servie_data_ids=explode(',',$_POST['checked_servie_data_ids']);
+        $checked_servie_data_name=explode(',',$_POST['checked_servie_data_name']);
+        $checked_servie_data_is_input=explode(',',$_POST['checked_servie_data_is_input']);
+        $checked_servie_price=explode(',',$_POST['checked_servie_price']);
+        
+        foreach($checked_servie_data_ids as $key=>$value)
+        {
+            $single_array=[
+                'service_name'=>$checked_servie_data_name[$key],
+                'service_price'=>$checked_servie_price[$key],
+                'service_id'=>$checked_servie_data_ids[$key],
+                'is_input'=>$checked_servie_data_is_input[$key]=="true" ? true : false,
+            ];
+            $final_array[]=$single_array;
+        }
+       
+        $info = array(
+            'country_id' => $_POST['country_id'],
+            'service_json'=>json_encode($final_array),
+            "created_at" => date('Y-m-d H:i:s')
+        );
+        
+        $encoderit_fixed_service_with_country=$wpdb->prefix.'encoderit_fixed_service_with_country';
+        if(isset($_POST['fixed_service_id']))
+        {
+            $info = array(
+                'country_id' => $_POST['country_id'],
+                'service_json'=>json_encode($final_array),
+                "updated_at" => date('Y-m-d H:i:s')
+            );
+            $where_condition=array(
+                'id' => $_POST['fixed_service_id'],
+            );
+            $wpdb->update($encoderit_fixed_service_with_country, $info, $where_condition);
+        }else
+        {
+            $wpdb->insert($encoderit_fixed_service_with_country, $info);
+        }
+        
+        echo  json_encode([
+            'status' => 'success',
+        ]);
+        wp_die();
+    }
+    public static function fixed_service_list()
+    {
+        require_once( dirname( __FILE__ ).'/admin_view/service/index_fixed_service.php' );
+    }
+    public static function fixed_service_update()
+    {
+        require_once( dirname( __FILE__ ).'/admin_view/service/fixed_service_update.php' );
+    }
+    public static function both_fixed_variable_service($result,$sql_fixed_service_result)
+    {
+        $is_payment_show=false;
         $html ='<button id="get_customized_selection_undone" style="display:none">Get Previous</button>';
         $html .='<button id="get_customized_selection" style="margin:10px">Customize Your Selections</button>';
         $html .='<h4>You can select and change the service here</h4>';
         $html .='<div id="fixed_section_service">';
-        foreach(self::fiexed_service() as $key=>$value)
+        foreach(json_decode($sql_fixed_service_result[0]->service_json,true) as $key=>$value)
         {
+            $fixed_service_others_price_flag=false;
+            $fixed_service_others_price_value=0;
+            if($value['service_name']=="Others")
+            {
+                $fixed_service_others_price_flag=true;
+                $fixed_service_others_price_value=$value['service_price'];
+                continue;
+            }
             if($value['is_input'])
             {
                 $html .='<div class="product__item d-flex-center">
@@ -247,66 +490,21 @@ class encoderit_admin_functionalities
                </div>';
     
             }
-            //$is_payment_show=true;
+            $is_payment_show=true;
         }else
         {
             $html .='<p>No service found for this country</p>';
         }
         $html .='</div>';
-       // $html .='<button id="get_customized_selection_undone" style="display:none">Get Previous</button>';
-        echo json_encode(['html'=>$html,'is_payment_show'=>$is_payment_show]);
-        wp_die();
-    }
-    public static function render_custom_settings_page()
-    {
-        require_once( dirname( __FILE__ ).'/admin_view/payment_gateway/index.php' );
-    }
 
-    public static function fiexed_service()
-    {
-        return [
-            [
-                'service_name'=>'Main Applicant',
-                'service_price'=>'1000',
-                'service_id'=>'fixed_id_1',
-                'is_input'=>true,
-            ],
-            [
-                'service_name'=>'Spouse Dependent',
-                'service_price'=>'500',
-                'service_id'=>'fixed_id_2',
-                'is_input'=>false,
-            ],
-            [
-                'service_name'=>'Adult Dependent',
-                'service_price'=>'400',
-                'service_id'=>'fixed_id_3',
-                'is_input'=>false,
-            ],
-            [
-                'service_name'=>'Second Adult Dependent ',
-                'service_price'=>'300',
-                'service_id'=>'fixed_id_4',
-                'is_input'=>false,
-            ],
-            [
-                'service_name'=>'Third Adult Dependent',
-                'service_price'=>'200',
-                'service_id'=>'fixed_id_5',
-                'is_input'=>false,
-            ],
-            [
-                'service_name'=>'Fourth Adult Dependent',
-                'service_price'=>'200',
-                'service_id'=>'fixed_id_6',
-                'is_input'=>false,
-            ],
-            [
-                'service_name'=>'Fifth Adult Dependent ',
-                'service_price'=>'200',
-                'service_id'=>'fixed_id_7',
-                'is_input'=>false,
-            ],
-        ];
+        return ['html'=>$html,'fixed_service_others_price_value'=>$fixed_service_others_price_value,'fixed_service_others_price_flag'=>$fixed_service_others_price_flag,'is_payment_show'=>$is_payment_show];
     }
+    public static function only_fixed_service()
+    {
+
+    }
+    public static function only_variable_service()
+    {
+
+    } 
 }
